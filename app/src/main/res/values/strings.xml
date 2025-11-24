@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Game Hub</string>
+    <string name="games_count_suffix">games ready</string>
+    <string name="refresh">Refresh</string>
+    <string name="add_game">Add Game</string>
+    <string name="no_games_title">No games found</string>
+    <string name="no_games_subtitle">Press + to add one</string>
+    <string name="download_games">Get new games</string>
+    <string name="add_to_library">Add to library</string>
+    <string name="search_apps">Search apps...</string>
+    <string name="remove_game_title">Remove Game?</string>
+    <string name="remove_game_desc">This will remove %1$s from the Game Hub.</string>
+    <string name="cancel">Cancel</string>
+    <string name="remove">Remove</string>
+    <string name="play">Play</string>
+    <string name="remove_action">Remove</string>
+</resources>

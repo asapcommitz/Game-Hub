@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Game Hub</string>
+    <string name="games_count_suffix">giochi pronti</string>
+    <string name="refresh">Aggiorna</string>
+    <string name="add_game">Aggiungi Gioco</string>
+    <string name="no_games_title">Nessun gioco trovato</string>
+    <string name="no_games_subtitle">Premi + per aggiungerne uno</string>
+    <string name="download_games">Scarica nuovi giochi</string>
+    <string name="add_to_library">Aggiungi alla libreria</string>
+    <string name="search_apps">Cerca app...</string>
+    <string name="remove_game_title">Rimuovere il gioco?</string>
+    <string name="remove_game_desc">Rimuoverai %1$s dal Game Hub.</string>
+    <string name="cancel">Annulla</string>
+    <string name="remove">Rimuovi</string>
+    <string name="play">Gioca</string>
+    <string name="remove_action">Rimuovi</string>
+</resources>
