@@ -1,5 +1,6 @@
 package com.fedeveloper95.games
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -18,6 +19,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -28,7 +30,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.SportsEsports
 import androidx.compose.material3.*
@@ -43,14 +44,17 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -63,28 +67,64 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-// --- TEMA ---
+// --- TEMA AUTOMATICO ---
 @Composable
-fun GameHubTheme(content: @Composable () -> Unit) {
+fun GameHubTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(), // Rileva impostazione sistema
+    content: @Composable () -> Unit
+) {
     val context = LocalContext.current
+    val view = LocalView.current
+
+    // Gestione colori dinamici (Material You) o fallback
     val colorScheme = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        dynamicDarkColorScheme(context)
+        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
     } else {
-        darkColorScheme(
-            primary = Color(0xFFD0BCFF),
-            onPrimary = Color(0xFF381E72),
-            primaryContainer = Color(0xFF4F378B),
-            onPrimaryContainer = Color(0xFFEADDFF),
-            secondary = Color(0xFFCCC2DC),
-            background = Color(0xFF141218),
-            surface = Color(0xFF141218),
-            surfaceContainer = Color(0xFF211F26)
-        )
+        if (darkTheme) {
+            darkColorScheme(
+                primary = Color(0xFFD0BCFF),
+                onPrimary = Color(0xFF381E72),
+                primaryContainer = Color(0xFF4F378B),
+                onPrimaryContainer = Color(0xFFEADDFF),
+                secondary = Color(0xFFCCC2DC),
+                background = Color(0xFF141218),
+                surface = Color(0xFF141218),
+                surfaceContainer = Color(0xFF211F26)
+            )
+        } else {
+            lightColorScheme(
+                primary = Color(0xFF6750A4),
+                onPrimary = Color.White,
+                primaryContainer = Color(0xFFEADDFF),
+                onPrimaryContainer = Color(0xFF21005D),
+                secondary = Color(0xFF625B71),
+                background = Color(0xFFF9F9FF), // Sfondo chiaro pulito
+                surface = Color(0xFFF9F9FF),
+                surfaceContainer = Color(0xFFE7E0EC)
+            )
+        }
+    }
+
+    // Gestione Barre di Sistema (Status Bar e Navigation Bar)
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            // Le rendiamo trasparenti per l'Edge-to-Edge
+            window.statusBarColor = Color.Transparent.toArgb()
+            window.navigationBarColor = Color.Transparent.toArgb()
+
+            // Se il tema è chiaro (!darkTheme), vogliamo icone scure (true).
+            // Se il tema è scuro (darkTheme), vogliamo icone chiare (false).
+            WindowCompat.getInsetsController(window, view).apply {
+                isAppearanceLightStatusBars = !darkTheme
+                isAppearanceLightNavigationBars = !darkTheme
+            }
+        }
     }
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography(),
+        typography = Typography(), // Font di sistema
         content = content
     )
 }
@@ -554,7 +594,6 @@ fun AnimatedPlayButton(onClick: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
-    // Animazione Forma: da Completamente Arrotondato (50) a leggermente squadrato (15)
     val cornerPercent by animateIntAsState(
         targetValue = if (isPressed) 15 else 50,
         animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
