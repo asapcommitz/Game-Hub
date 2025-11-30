@@ -1,14 +1,32 @@
-This app is mainly inspired by OnePlus' Game Space from OxygenOS 11. That app didn't do anything special; it was just a shortcut to all your games and nothing much. That's what I've done with this app: now you don't have to search for a game icon in your messy app drawer, every game's icon is right there in Game Hub.
+# Game Hub
 
-This is a very simple app, and the main focus was to give a sort of game launcher in primis to Pixel and AOSP devices, but it can be used on any device.
+![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=for-the-badge&logo=kotlin&logoColor=white) ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white) ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-4285F4?style=for-the-badge&logo=android&logoColor=white) ![Material 3](https://img.shields.io/badge/Material%203-Expressive-purple?style=for-the-badge)
 
-This app is created following the Material 3 Expressive guidelines in the best way possible.
+**A minimalist game launcher built with Jetpack Compose and Material 3 Expressive.**
 
-If you find any bugs or have feature requests, contact me on Telegram! 
+### About
 
-<img width="270" height="600" alt="76e7a24f-d9b1-4bd5-9494-48e1347de72c-1_all_8391" src="https://github.com/user-attachments/assets/c7b0b44d-07f5-4917-bb85-0394c5f92514" />
-<img width="270" height="600" alt="76e7a24f-d9b1-4bd5-9494-48e1347de72c-1_all_8392" src="https://github.com/user-attachments/assets/67a091e5-4918-45d5-94d6-ccc98842e6eb" />
-<img width="270" height="600" alt="76e7a24f-d9b1-4bd5-9494-48e1347de72c-1_all_8393" src="https://github.com/user-attachments/assets/0b480646-5a95-446b-83a6-4f106eee9ab0" />
-<img width="270" height="600" alt="76e7a24f-d9b1-4bd5-9494-48e1347de72c-1_all_8394" src="https://github.com/user-attachments/assets/84109bda-1efe-42fe-9362-1398179e6aa5" />
-<img width="270" height="600" alt="76e7a24f-d9b1-4bd5-9494-48e1347de72c-1_all_8395" src="https://github.com/user-attachments/assets/cd615c6a-2735-4e9d-bb16-aa7879782016" />
-<img width="270" height="600" alt="76e7a24f-d9b1-4bd5-9494-48e1347de72c-1_all_8396" src="https://github.com/user-attachments/assets/a4447299-8ca4-4679-864f-e2d9650d3fd0" />
+Game Hub brings the simplicity of the classic OxygenOS 11 Game Space to modern Android devices. It eliminates the need to scroll through a messy app drawer to find your next adventure.
+
+This app acts as a dedicated sanctuary for your games. It automatically detects installed games and presents them in a clean, unified interface. While it is designed with **Pixel and AOSP** aesthetics in priority, it functions seamlessly on any Android 8+ device.
+
+### Design
+
+The UI is crafted following the latest **Material 3 Expressive** guidelines.
+
+### Screenshots
+
+<details>
+  <summary><b>Click to expand screenshots</b></summary>
+  <br>
+  <img width="260" alt="Game Hub" src="https://github.com/user-attachments/assets/67c97bb0-2ca2-46e4-a2fd-75116c87b09b" />
+  
+  <img width="260" alt="Game Hub menu" src="https://github.com/user-attachments/assets/0b0a19a3-d215-430b-9081-1c130c7cf4c1" />
+
+</details>
+
+### Feedback
+
+Found a bug or have a feature request? Reach me directly via Telegram.
+
+[Contact me on Telegram](https://t.me/fedeveloper95)
