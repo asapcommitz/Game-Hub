@@ -4,6 +4,8 @@
 
 **A minimalist game launcher built with Jetpack Compose and Material 3 Expressive.**
 
+[![Get it on GitHub](https://img.shields.io/badge/Get%20it%20on-GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/FeDeveloper95/Game-Hub/releases)
+
 ### About
 
 Game Hub brings the simplicity of the classic OxygenOS 11 Game Space to modern Android devices. It eliminates the need to scroll through a messy app drawer to find your next adventure.
@@ -17,11 +19,11 @@ The UI is crafted following the latest **Material 3 Expressive** guidelines.
 ### Screenshots
 
 <details>
-  <summary><b>Click to expand screenshots</b></summary>
-  <br>
-  <img width="260" alt="Game Hub" src="https://github.com/user-attachments/assets/67c97bb0-2ca2-46e4-a2fd-75116c87b09b" />
-  
-  <img width="260" alt="Game Hub menu" src="https://github.com/user-attachments/assets/0b0a19a3-d215-430b-9081-1c130c7cf4c1" />
+  <summary><b>Click to expand screenshots</b></summary>
+  <br>
+  <img width="260" alt="Game Hub" src="https://github.com/user-attachments/assets/67c97bb0-2ca2-46e4-a2fd-75116c87b09b" />
+  
+  <img width="260" alt="Game Hub menu" src="https://github.com/user-attachments/assets/0b0a19a3-d215-430b-9081-1c130c7cf4c1" />
 
 </details>
 
