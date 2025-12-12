@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App.Starting"
         android:enableOnBackInvokedCallback="true"
-        tools:targetApi="35">
+        tools:targetApi="36">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -26,6 +27,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Nuova Activity Impostazioni -->
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:label="Settings"
+            android:theme="@style/Theme.GameHub" />
+
     </application>
 
 </manifest>

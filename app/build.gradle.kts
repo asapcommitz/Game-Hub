@@ -6,18 +6,19 @@ plugins {
 
 android {
     namespace = "com.fedeveloper95.games"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.fedeveloper95.games"
         minSdk = 26
         targetSdk = 36
-        versionCode = 12
-        versionName = "1.2"
+        versionCode = 13
+        versionName = "1.3"
 
         vectorDrawables {
             useSupportLibrary = true
         }
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -38,6 +39,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
@@ -58,10 +60,13 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
 
-    // Material 3 Stabile
+    // Material 3 Expressive
     implementation("androidx.compose.material3:material3:1.3.0")
 
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
     implementation("io.coil-kt:coil-compose:2.7.0")
+
+    // Reorderable List (Drag & Drop fluido)
+    implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
 }

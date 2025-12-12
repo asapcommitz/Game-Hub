@@ -11,12 +11,14 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -24,20 +26,28 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DragHandle
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.SportsEsports
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.toArgb
@@ -53,6 +63,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -68,8 +79,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.burnoutcrew.reorderable.ReorderableItem
+import org.burnoutcrew.reorderable.detectReorderAfterLongPress
+import org.burnoutcrew.reorderable.rememberReorderableLazyListState
+import org.burnoutcrew.reorderable.reorderable
 
-// --- GOOGLE SANS FLEX FONT (Variabile & Rounded) ---
+// --- GOOGLE SANS FLEX FONT ---
 @OptIn(ExperimentalTextApi::class)
 val GoogleSansFlex = FontFamily(
     Font(
@@ -86,16 +101,18 @@ val GoogleSansFlex = FontFamily(
 
 // --- TIPOGRAFIA EXPRESSIVE ---
 val ExpressiveTypography = Typography(
-    headlineLarge = TextStyle(
+    // Titolo Grande (Espanso)
+    headlineMedium = TextStyle( // LargeTopAppBar usa headlineMedium per default
         fontFamily = GoogleSansFlex,
         fontWeight = FontWeight.Normal,
-        fontSize = 48.sp,
-        lineHeight = 56.sp,
-        letterSpacing = (-1).sp
+        fontSize = 42.sp, // Dimensione generosa
+        lineHeight = 48.sp,
+        letterSpacing = (-0.5).sp
     ),
+    // Titolo Piccolo (Collassato)
     titleLarge = TextStyle(
         fontFamily = GoogleSansFlex,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
@@ -103,7 +120,7 @@ val ExpressiveTypography = Typography(
     titleMedium = TextStyle(
         fontFamily = GoogleSansFlex,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
+        fontSize = 18.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.15.sp
     ),
@@ -116,14 +133,14 @@ val ExpressiveTypography = Typography(
     ),
     labelLarge = TextStyle(
         fontFamily = GoogleSansFlex,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp
     )
 )
 
-// --- TEMA AUTOMATICO ---
+// --- TEMA ---
 @Composable
 fun GameHubTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -165,7 +182,6 @@ fun GameHubTheme(
             val window = (view.context as Activity).window
             window.statusBarColor = Color.Transparent.toArgb()
             window.navigationBarColor = Color.Transparent.toArgb()
-
             WindowCompat.getInsetsController(window, view).apply {
                 isAppearanceLightStatusBars = !darkTheme
                 isAppearanceLightNavigationBars = !darkTheme
@@ -215,6 +231,7 @@ class GameViewModel : ViewModel() {
 
     private val HIDDEN_GAMES_PREF = "hidden_games"
     private val MANUAL_GAMES_PREF = "manual_games"
+    private val GAME_ORDER_PREF = "game_order"
 
     private var loadJob: Job? = null
 
@@ -222,12 +239,12 @@ class GameViewModel : ViewModel() {
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
             _isLoading.value = true
-
             val packageManager = context.packageManager
             val loadedData = withContext(Dispatchers.IO) {
                 try {
                     val hiddenGames = getPrefsSet(context, HIDDEN_GAMES_PREF)
                     val manualGames = getPrefsSet(context, MANUAL_GAMES_PREF)
+                    val savedOrder = getSavedOrder(context)
 
                     val intent = Intent(Intent.ACTION_MAIN, null)
                     intent.addCategory(Intent.CATEGORY_LAUNCHER)
@@ -265,7 +282,18 @@ class GameViewModel : ViewModel() {
                             gamesList.add(app)
                         }
                     }
-                    Pair(gamesList.sortedBy { it.name }, allAppsList.sortedBy { it.name })
+
+                    // Ordinamento
+                    val sortedGames = if (savedOrder.isNotEmpty()) {
+                        gamesList.sortedBy { game ->
+                            val index = savedOrder.indexOf(game.packageName)
+                            if (index != -1) index else Int.MAX_VALUE
+                        }
+                    } else {
+                        gamesList.sortedBy { it.name }
+                    }
+
+                    Pair(sortedGames, allAppsList.sortedBy { it.name })
                 } catch (e: Exception) {
                     Pair(emptyList(), emptyList())
                 }
@@ -275,6 +303,23 @@ class GameViewModel : ViewModel() {
             _allApps.value = loadedData.second
             _isLoading.value = false
         }
+    }
+
+    fun updateGamesOrder(newOrder: List<GameApp>) {
+        _games.value = newOrder
+    }
+
+    fun saveOrder(context: Context) {
+        val orderList = _games.value.map { it.packageName }
+        val orderString = orderList.joinToString(",")
+        val prefs = context.getSharedPreferences("game_hub_prefs", Context.MODE_PRIVATE)
+        prefs.edit().putString(GAME_ORDER_PREF, orderString).apply()
+    }
+
+    private fun getSavedOrder(context: Context): List<String> {
+        val prefs = context.getSharedPreferences("game_hub_prefs", Context.MODE_PRIVATE)
+        val orderString = prefs.getString(GAME_ORDER_PREF, "") ?: ""
+        return if (orderString.isNotEmpty()) orderString.split(",") else emptyList()
     }
 
     fun hideGame(context: Context, packageName: String) {
@@ -328,7 +373,7 @@ class MainActivity : ComponentActivity() {
 }
 
 // --- UI ---
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
     val context = LocalContext.current
@@ -337,12 +382,38 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
 
     var showAddSheet by remember { mutableStateOf(false) }
     var gameToRemove by remember { mutableStateOf<GameApp?>(null) }
+    var isEditMode by remember { mutableStateOf(false) }
+    var showSaveDialog by remember { mutableStateOf(false) }
 
-    // Manteniamo lo scroll behavior SOLO per il collasso del titolo
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
+    // Stato Drag & Drop
+    val reorderState = rememberReorderableLazyListState(
+        onMove = { from, to ->
+            // Nota: 'from.index' include eventuali header.
+            // Se aggiungiamo un header (item) prima della lista, gli indici saranno sfalsati di 1.
+            // Qui abbiamo 1 header (sottotitolo).
+            val headerCount = 1
+
+            val currentList = games.toMutableList()
+            // Convertiamo indice lista UI -> indice lista dati
+            val fromIndex = from.index - headerCount
+            val toIndex = to.index - headerCount
+
+            if (fromIndex in currentList.indices && toIndex in currentList.indices) {
+                val item = currentList.removeAt(fromIndex)
+                currentList.add(toIndex, item)
+                viewModel.updateGamesOrder(currentList)
+            }
+        }
+    )
+
     LaunchedEffect(Unit) {
-        viewModel.loadGames(context)
+        if (games.isEmpty()) viewModel.loadGames(context)
+    }
+
+    BackHandler(enabled = isEditMode) {
+        showSaveDialog = true
     }
 
     Scaffold(
@@ -352,99 +423,160 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
         topBar = {
             LargeTopAppBar(
                 title = {
-                    Column {
-                        Text(
-                            text = stringResource(R.string.app_name),
-                            style = MaterialTheme.typography.headlineLarge,
-                            modifier = Modifier.padding(bottom = 4.dp)
-                        )
-                        if (scrollBehavior.state.collapsedFraction < 0.5f) {
-                            Text(
-                                text = "${games.size} ${stringResource(R.string.games_count_suffix)}",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.secondary
-                            )
+                    // Titolo Singolo: M3 gestisce la transizione HeadlineMedium -> TitleLarge automaticamente
+                    Text(
+                        text = if (isEditMode) "Modifica Ordine" else stringResource(R.string.app_name)
+                    )
+                },
+                navigationIcon = {
+                    if (isEditMode) {
+                        IconButton(onClick = { showSaveDialog = true }) {
+                            Icon(Icons.Default.Close, contentDescription = "Cancel")
+                        }
+                    }
+                },
+                actions = {
+                    if (isEditMode) {
+                        IconButton(onClick = {
+                            viewModel.saveOrder(context)
+                            isEditMode = false
+                        }) {
+                            Icon(Icons.Default.Check, contentDescription = "Save Order")
+                        }
+                    } else {
+                        IconButton(onClick = {
+                            val intent = Intent(context, SettingsActivity::class.java)
+                            context.startActivity(intent)
+                        }) {
+                            Icon(Icons.Default.Settings, contentDescription = "Settings")
                         }
                     }
                 },
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.largeTopAppBarColors(
-                    containerColor = Color.Transparent,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground
                 )
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { showAddSheet = true },
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier.padding(bottom = 88.dp),
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_game))
+            if (!isEditMode) {
+                // FAB Standard in basso a destra
+                FloatingActionButton(
+                    onClick = { showAddSheet = true },
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    // shape = RoundedCornerShape(16.dp) // Standard M3 shape è già ok o personalizzabile
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_game))
+                }
             }
         }
     ) { padding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = padding.calculateTopPadding())
-        ) {
-            if (games.isEmpty() && !isLoading) {
-                EmptyState()
-            } else if (isLoading && games.isEmpty()) {
-                // Indicatore di caricamento solo iniziale se la lista è vuota
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+        if (games.isEmpty() && !isLoading) {
+            EmptyState(modifier = Modifier.padding(padding))
+        } else {
+            LazyColumn(
+                state = reorderState.listState, // Collega lo stato Reorderable
+                contentPadding = PaddingValues(
+                    start = 20.dp,
+                    end = 20.dp,
+                    // Padding top standard, lo scaling è gestito dalla TopBar
+                    top = padding.calculateTopPadding(),
+                    bottom = 120.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .reorderable(reorderState) // Abilita Drag
+            ) {
+                // Sottotitolo (Header - Index 0)
+                item {
+                    if (!isEditMode) {
+                        Text(
+                            text = "${games.size} ${stringResource(R.string.games_count_suffix)}",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
+                        )
+                    } else {
+                        Text(
+                            text = "Trascina per spostare",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
+                        )
+                    }
                 }
-            } else {
-                LazyColumn(
-                    contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 120.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    items(items = games, key = { it.packageName }) { game ->
-                        SwipeToDeleteContainer(item = game, onDelete = { gameToRemove = game }) {
-                            GameListItem(game = game, onLaunch = {
-                                game.launchIntent?.let { context.startActivity(it) }
-                            })
+
+                itemsIndexed(items = games, key = { _, item -> item.packageName }) { index, game ->
+                    ReorderableItem(reorderState, key = game.packageName) { isDragging ->
+                        // Effetto elevazione durante il drag
+                        val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
+
+                        if (!isEditMode) {
+                            // Modalità Normale: Swipe to delete
+                            SwipeToDeleteContainer(item = game, onDelete = { gameToRemove = game }) {
+                                GameListItem(
+                                    game = game,
+                                    isEditMode = false,
+                                    onLaunch = { game.launchIntent?.let { context.startActivity(it) } },
+                                    onLongPress = { isEditMode = true }
+                                )
+                            }
+                        } else {
+                            // Modalità Edit: Drag & Drop abilitato
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .shadow(elevation.value, RoundedCornerShape(24.dp))
+                                    .background(MaterialTheme.colorScheme.background)
+                                    .detectReorderAfterLongPress(reorderState) // Long press per trascinare
+                            ) {
+                                GameListItem(
+                                    game = game,
+                                    isEditMode = true,
+                                    onLaunch = {},
+                                    onLongPress = {},
+                                    isDragging = isDragging
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            Surface(
-                onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW).apply { data = Uri.parse("market://search?q=games&c=apps") }
-                    try { context.startActivity(intent) } catch (e: Exception) {}
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 32.dp)
-                    .height(64.dp)
-                    .widthIn(min = 220.dp, max = 320.dp)
-                    .zIndex(1f),
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                tonalElevation = 8.dp,
-                shadowElevation = 6.dp
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 24.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Icon(Icons.Default.Apps, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(26.dp))
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text(
-                        stringResource(R.string.download_games),
-                        style = MaterialTheme.typography.labelLarge.copy(fontSize = 16.sp, fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+                if (!isEditMode) {
+                    item {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        GetMoreGamesCard(context)
+                    }
                 }
             }
         }
+    }
+
+    if (showSaveDialog) {
+        AlertDialog(
+            onDismissRequest = { showSaveDialog = false },
+            title = { Text("Salvare l'ordine?") },
+            text = { Text("Vuoi salvare il nuovo ordine personalizzato dei giochi?") },
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            confirmButton = {
+                Button(onClick = {
+                    viewModel.saveOrder(context)
+                    isEditMode = false
+                    showSaveDialog = false
+                }) { Text("Salva") }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    viewModel.loadGames(context)
+                    isEditMode = false
+                    showSaveDialog = false
+                }) { Text("Annulla") }
+            }
+        )
     }
 
     if (gameToRemove != null) {
@@ -481,7 +613,151 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
     }
 }
 
-// --- BOTTOM SHEET ---
+// --- ITEM GIOCO ---
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
+@Composable
+fun GameListItem(
+    game: GameApp,
+    isEditMode: Boolean,
+    onLaunch: () -> Unit,
+    onLongPress: () -> Unit = {},
+    isDragging: Boolean = false
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val scaleFactor = if (isEditMode || isDragging) 0.98f else 1f
+
+    val cornerPercent by animateIntAsState(
+        targetValue = if (isPressed || isDragging) 10 else 28,
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        label = "cardMorph"
+    )
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(104.dp)
+            .scale(scaleFactor)
+            .combinedClickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onLaunch,
+                onLongClick = onLongPress,
+                enabled = !isEditMode // Cliccabile solo se non in edit mode (in edit serve per drag)
+            ),
+        shape = RoundedCornerShape(cornerPercent.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isEditMode || isDragging) MaterialTheme.colorScheme.surfaceContainerHighest else MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.8f)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = if (isDragging) 8.dp else 0.dp),
+        border = if (isEditMode) androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)) else null
+    ) {
+        Row(
+            modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AsyncImage(
+                model = game.icon,
+                contentDescription = null,
+                modifier = Modifier.size(68.dp).clip(RoundedCornerShape(22.dp)),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(modifier = Modifier.width(24.dp))
+            Text(
+                text = game.name,
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 1,
+                modifier = Modifier.weight(1f)
+            )
+
+            if (isEditMode) {
+                // Icona Drag Handle (Visiva)
+                Icon(
+                    Icons.Default.DragHandle,
+                    contentDescription = "Drag",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            } else {
+                AnimatedPlayButton(onClick = onLaunch)
+            }
+        }
+    }
+}
+
+// --- CARD "SCARICA NUOVI GIOCHI" ---
+@Composable
+fun GetMoreGamesCard(context: Context) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(if (isPressed) 0.98f else 1f, label = "scale")
+
+    Surface(
+        onClick = {
+            val intent = Intent(Intent.ACTION_VIEW).apply { data = Uri.parse("market://search?q=games&c=apps") }
+            try { context.startActivity(intent) } catch (e: Exception) {}
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(64.dp)
+            .scale(scale)
+            .padding(horizontal = 24.dp),
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        tonalElevation = 8.dp,
+        shadowElevation = 6.dp,
+        interactionSource = interactionSource
+    ) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                Icons.Default.Apps,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(26.dp)
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = stringResource(R.string.download_games),
+                style = MaterialTheme.typography.labelLarge.copy(fontSize = 16.sp, fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+
+@Composable
+fun AnimatedPlayButton(onClick: () -> Unit) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val cornerPercent by animateIntAsState(
+        targetValue = if (isPressed) 15 else 50,
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        label = "btnMorph"
+    )
+
+    Button(
+        onClick = onClick,
+        modifier = Modifier.height(40.dp),
+        shape = RoundedCornerShape(cornerPercent),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        interactionSource = interactionSource,
+        contentPadding = PaddingValues(horizontal = 24.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.play),
+            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddGameBottomSheet(
@@ -587,82 +863,6 @@ fun GroupedAppItem(
             )
             Icon(Icons.Default.Add, null, tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f))
         }
-    }
-}
-
-@Composable
-fun GameListItem(
-    game: GameApp,
-    onLaunch: () -> Unit
-) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-    val cornerPercent by animateIntAsState(
-        targetValue = if (isPressed) 10 else 28,
-        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-        label = "cardMorph"
-    )
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(104.dp)
-            .clickable(interactionSource = interactionSource, indication = null, onClick = onLaunch),
-        shape = RoundedCornerShape(cornerPercent.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.8f)
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            AsyncImage(
-                model = game.icon,
-                contentDescription = null,
-                modifier = Modifier.size(68.dp).clip(RoundedCornerShape(22.dp)),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.width(24.dp))
-            Text(
-                text = game.name,
-                style = MaterialTheme.typography.titleMedium,
-                maxLines = 1,
-                modifier = Modifier.weight(1f)
-            )
-
-            AnimatedPlayButton(onClick = onLaunch)
-        }
-    }
-}
-
-@Composable
-fun AnimatedPlayButton(onClick: () -> Unit) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-
-    val cornerPercent by animateIntAsState(
-        targetValue = if (isPressed) 15 else 50,
-        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-        label = "btnMorph"
-    )
-
-    Button(
-        onClick = onClick,
-        modifier = Modifier.height(40.dp),
-        shape = RoundedCornerShape(cornerPercent),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
-        ),
-        interactionSource = interactionSource,
-        contentPadding = PaddingValues(horizontal = 24.dp)
-    ) {
-        Text(
-            text = stringResource(R.string.play),
-            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
-        )
     }
 }
 
