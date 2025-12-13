@@ -38,9 +38,10 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.ShoppingBag
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.SportsEsports
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -66,6 +67,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -85,8 +87,8 @@ import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
+import androidx.compose.material3.ripple
 
-// --- GOOGLE SANS FLEX FONT ---
 @OptIn(ExperimentalTextApi::class)
 val GoogleSansFlex = FontFamily(
     Font(
@@ -101,17 +103,14 @@ val GoogleSansFlex = FontFamily(
     )
 )
 
-// --- TIPOGRAFIA EXPRESSIVE ---
 val ExpressiveTypography = Typography(
-    // Titolo Grande (Espanso)
-    headlineMedium = TextStyle( // LargeTopAppBar usa headlineMedium per default
+    headlineMedium = TextStyle(
         fontFamily = GoogleSansFlex,
         fontWeight = FontWeight.Normal,
-        fontSize = 42.sp, // Dimensione generosa
+        fontSize = 42.sp,
         lineHeight = 48.sp,
         letterSpacing = (-0.5).sp
     ),
-    // Titolo Piccolo (Collassato)
     titleLarge = TextStyle(
         fontFamily = GoogleSansFlex,
         fontWeight = FontWeight.Bold,
@@ -142,7 +141,6 @@ val ExpressiveTypography = Typography(
     )
 )
 
-// --- TEMA ---
 @Composable
 fun GameHubTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -198,7 +196,6 @@ fun GameHubTheme(
     )
 }
 
-// --- ANIMAZIONI ---
 @Composable
 fun animateCornerPercentAsState(
     isPressed: Boolean,
@@ -212,7 +209,6 @@ fun animateCornerPercentAsState(
     )
 }
 
-// --- DATI ---
 data class GameApp(
     val name: String,
     val packageName: String,
@@ -220,7 +216,6 @@ data class GameApp(
     val launchIntent: Intent?
 )
 
-// --- VIEWMODEL ---
 class GameViewModel : ViewModel() {
     private val _games = MutableStateFlow<List<GameApp>>(emptyList())
     val games: StateFlow<List<GameApp>> = _games
@@ -285,7 +280,6 @@ class GameViewModel : ViewModel() {
                         }
                     }
 
-                    // Ordinamento
                     val sortedGames = if (savedOrder.isNotEmpty()) {
                         gamesList.sortedBy { game ->
                             val index = savedOrder.indexOf(game.packageName)
@@ -358,7 +352,6 @@ class GameViewModel : ViewModel() {
     }
 }
 
-// --- ACTIVITY ---
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -374,7 +367,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// --- UI ---
 @OptIn(ExperimentalMaterial3Api::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
@@ -390,13 +382,11 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    // Filtro giochi
     val displayGames = remember(games, searchQuery) {
         if (searchQuery.isEmpty()) games
         else games.filter { it.name.contains(searchQuery, ignoreCase = true) }
     }
 
-    // Helper per aprire Play Store
     val openPlayStore: (String) -> Unit = { packageName ->
         try {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName"))
@@ -409,20 +399,13 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
         }
     }
 
-    // Stato Drag & Drop
     val reorderState = rememberReorderableLazyListState(
         onMove = { from, to ->
-            // Disabilita reorder se stiamo cercando
             if (searchQuery.isNotEmpty()) return@rememberReorderableLazyListState
 
-            // Nota: 'from.index' include eventuali header.
-            // Header 1: SearchBar
-            // Header 2: Conteggio giochi
-            // Totale header = 2
             val headerCount = 2
 
             val currentList = games.toMutableList()
-            // Convertiamo indice lista UI -> indice lista dati
             val fromIndex = from.index - headerCount
             val toIndex = to.index - headerCount
 
@@ -453,7 +436,6 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
         topBar = {
             LargeTopAppBar(
                 title = {
-                    // Titolo Singolo: M3 gestisce la transizione HeadlineMedium -> TitleLarge automaticamente
                     Text(
                         text = if (isEditMode) "Modifica Ordine" else stringResource(R.string.app_name)
                     )
@@ -492,12 +474,10 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
         },
         floatingActionButton = {
             if (!isEditMode && searchQuery.isEmpty()) {
-                // FAB Standard in basso a destra
                 FloatingActionButton(
                     onClick = { showAddSheet = true },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    // shape = RoundedCornerShape(16.dp) // Standard M3 shape è già ok o personalizzabile
                 ) {
                     Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_game))
                 }
@@ -508,20 +488,18 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
             EmptyState(modifier = Modifier.padding(padding))
         } else {
             LazyColumn(
-                state = reorderState.listState, // Collega lo stato Reorderable
+                state = reorderState.listState,
                 contentPadding = PaddingValues(
                     start = 20.dp,
                     end = 20.dp,
-                    // Padding top standard, lo scaling è gestito dalla TopBar
                     top = padding.calculateTopPadding(),
                     bottom = 120.dp
                 ),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
                     .fillMaxSize()
-                    .reorderable(reorderState) // Abilita Drag
+                    .reorderable(reorderState)
             ) {
-                // Barra di Ricerca (Header - Index 0)
                 item {
                     if (!isEditMode) {
                         HomeSearchBar(
@@ -532,7 +510,6 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                     }
                 }
 
-                // Sottotitolo Conteggio (Header - Index 1)
                 item {
                     if (!isEditMode) {
                         Text(
@@ -556,11 +533,9 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                         reorderState,
                         key = game.packageName
                     ) { isDragging ->
-                        // Effetto elevazione durante il drag
                         val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
 
                         if (!isEditMode) {
-                            // Modalità Normale: Swipe to delete
                             SwipeToDeleteContainer(item = game, onDelete = { gameToRemove = game }) {
                                 GameListItem(
                                     game = game,
@@ -573,13 +548,12 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                                 )
                             }
                         } else {
-                            // Modalità Edit: Drag & Drop abilitato
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .shadow(elevation.value, RoundedCornerShape(24.dp))
                                     .background(MaterialTheme.colorScheme.background)
-                                    .detectReorderAfterLongPress(reorderState) // Long press per trascinare
+                                    .detectReorderAfterLongPress(reorderState)
                             ) {
                                 GameListItem(
                                     game = game,
@@ -661,7 +635,6 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
     }
 }
 
-// --- BARRA DI RICERCA ---
 @Composable
 fun HomeSearchBar(
     query: String,
@@ -687,7 +660,6 @@ fun HomeSearchBar(
     )
 }
 
-// --- ITEM GIOCO ---
 @OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun GameListItem(
@@ -719,7 +691,7 @@ fun GameListItem(
                 indication = null,
                 onClick = onLaunch,
                 onLongClick = onLongPress,
-                enabled = !isEditMode // Cliccabile solo se non in edit mode (in edit serve per drag)
+                enabled = !isEditMode
             ),
         shape = RoundedCornerShape(cornerPercent.dp),
         colors = CardDefaults.cardColors(
@@ -747,14 +719,12 @@ fun GameListItem(
             )
 
             if (isEditMode) {
-                // Icona Drag Handle (Visiva)
                 Icon(
                     Icons.Default.DragHandle,
                     contentDescription = "Drag",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             } else {
-                // Pulsante Store con Icona ShoppingBag
                 IconButton(onClick = onStoreClick) {
                     Icon(
                         imageVector = Icons.Outlined.ShoppingBag,
@@ -769,7 +739,6 @@ fun GameListItem(
     }
 }
 
-// --- CARD "SCARICA NUOVI GIOCHI" ---
 @Composable
 fun GetMoreGamesCard(context: Context) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -939,12 +908,22 @@ fun GroupedAppItem(
                 modifier = Modifier.size(42.dp).clip(CircleShape)
             )
             Spacer(modifier = Modifier.width(16.dp))
-            Text(
-                text = app.name,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.weight(1f)
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = app.name,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = app.packageName,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
             Icon(Icons.Default.Add, null, tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f))
         }
     }
@@ -965,23 +944,20 @@ fun SwipeToDeleteContainer(
             }
             false
         },
-        // FIX: Richiede uno swipe del 50% della larghezza per attivare l'azione
         positionalThreshold = { it * 0.5f }
     )
 
     SwipeToDismissBox(
         state = dismissState,
         backgroundContent = {
-            // Animazione Colore Sfondo
             val color by animateColorAsState(
                 targetValue = if (dismissState.targetValue == SwipeToDismissBoxValue.StartToEnd)
                     MaterialTheme.colorScheme.errorContainer
                 else
-                    MaterialTheme.colorScheme.surfaceContainerHighest, // Colore neutro quando a riposo
+                    MaterialTheme.colorScheme.surfaceContainerHighest,
                 label = "bgColor"
             )
 
-            // Animazione Colore Icona
             val iconColor by animateColorAsState(
                 targetValue = if (dismissState.targetValue == SwipeToDismissBoxValue.StartToEnd)
                     MaterialTheme.colorScheme.onErrorContainer
@@ -990,7 +966,6 @@ fun SwipeToDeleteContainer(
                 label = "iconColor"
             )
 
-            // Animazione Scala Icona (Rimbalzo)
             val scale by animateFloatAsState(
                 targetValue = if (dismissState.targetValue == SwipeToDismissBoxValue.StartToEnd) 1.3f else 0.8f,
                 animationSpec = spring(
@@ -1016,7 +991,6 @@ fun SwipeToDeleteContainer(
                         modifier = Modifier.scale(scale)
                     )
                     Spacer(modifier = Modifier.width(12.dp))
-                    // Testo che appare solo quando l'azione è attiva
                     AnimatedVisibility(
                         visible = dismissState.targetValue == SwipeToDismissBoxValue.StartToEnd,
                         enter = fadeIn() + expandHorizontally(),
