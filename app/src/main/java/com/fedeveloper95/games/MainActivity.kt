@@ -142,11 +142,32 @@ val ExpressiveTypography = Typography(
 
 @Composable
 fun GameHubTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+    val prefs = remember { context.getSharedPreferences("game_hub_settings", Context.MODE_PRIVATE) }
+
+    // 0 = System, 1 = Light, 2 = Dark
+    val savedTheme = remember { mutableIntStateOf(prefs.getInt("pref_theme", 0)) }
+
+    DisposableEffect(Unit) {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            if (key == "pref_theme") {
+                savedTheme.intValue = sharedPreferences.getInt("pref_theme", 0)
+            }
+        }
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        onDispose {
+            prefs.unregisterOnSharedPreferenceChangeListener(listener)
+        }
+    }
+
+    val darkTheme = when (savedTheme.intValue) {
+        1 -> false
+        2 -> true
+        else -> isSystemInDarkTheme()
+    }
 
     val colorScheme = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)

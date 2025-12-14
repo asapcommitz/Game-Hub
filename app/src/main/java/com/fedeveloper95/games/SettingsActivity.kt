@@ -2,7 +2,6 @@ package com.fedeveloper95.games
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -11,7 +10,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
@@ -22,9 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.ViewAgenda
 import androidx.compose.material3.*
@@ -40,7 +36,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,7 +99,6 @@ fun SettingsScreen(onBack: () -> Unit) {
     val developerIconColor = Color(0xFF6C757D)
     val developerContainerColor = Color(0xFFE9ECEF)
 
-
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
@@ -126,7 +120,6 @@ fun SettingsScreen(onBack: () -> Unit) {
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { padding ->
-        // Unisce tutte le voci in un unico Column con CardGroup uniche
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -134,8 +127,6 @@ fun SettingsScreen(onBack: () -> Unit) {
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
-
-            // GRUPPO 1: ASPETTO
             SettingsGroupCard {
                 SettingsItem(
                     icon = Icons.Outlined.DarkMode,
@@ -162,12 +153,11 @@ fun SettingsScreen(onBack: () -> Unit) {
                     subtitle = currentCardStyle,
                     onClick = { showStyleDialog = true }
                 )
-            }
 
-            Spacer(modifier = Modifier.height(24.dp)) // Separazione marcata tra i gruppi
+                Spacer(modifier = Modifier.height(2.dp))
+                HorizontalDivider(color = MaterialTheme.colorScheme.surfaceContainerHigh)
+                Spacer(modifier = Modifier.height(2.dp))
 
-            // GRUPPO 2: INFORMAZIONI
-            SettingsGroupCard {
                 SettingsItem(
                     icon = Icons.Default.Info,
                     iconContainerColor = versionContainerColor,
@@ -256,7 +246,7 @@ fun SettingsGroupCard(content: @Composable ColumnScope.() -> Unit) {
 
 @Composable
 fun SettingsHeader(title: String) {
-    Spacer(modifier = Modifier.height(0.dp)) // Rimosso l'Header, ma mantengo la funzione per coerenza
+    Spacer(modifier = Modifier.height(0.dp))
 }
 
 @Composable
