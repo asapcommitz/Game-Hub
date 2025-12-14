@@ -26,7 +26,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -38,7 +40,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.ShoppingBag
 import androidx.compose.material.icons.rounded.SportsEsports
@@ -52,6 +53,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
@@ -69,7 +71,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
+import androidx.compose.ui.util.lerp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
@@ -86,7 +88,7 @@ import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
-import androidx.compose.material3.ripple
+import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalTextApi::class)
 val GoogleSansFlex = FontFamily(
@@ -148,7 +150,6 @@ fun GameHubTheme(
     val view = LocalView.current
     val prefs = remember { context.getSharedPreferences("game_hub_settings", Context.MODE_PRIVATE) }
 
-    // 0 = System, 1 = Light, 2 = Dark
     val savedTheme = remember { mutableIntStateOf(prefs.getInt("pref_theme", 0)) }
 
     DisposableEffect(Unit) {
@@ -213,19 +214,6 @@ fun GameHubTheme(
         colorScheme = colorScheme,
         typography = ExpressiveTypography,
         content = content
-    )
-}
-
-@Composable
-fun animateCornerPercentAsState(
-    isPressed: Boolean,
-    defaultPercent: Int = 50,
-    pressedPercent: Int = 20
-): State<Int> {
-    return animateIntAsState(
-        targetValue = if (isPressed) pressedPercent else defaultPercent,
-        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-        label = "cornerMorph"
     )
 }
 
@@ -400,6 +388,21 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
     var showSaveDialog by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
 
+    val prefs = remember { context.getSharedPreferences("game_hub_settings", Context.MODE_PRIVATE) }
+    val currentCardStyle = remember { mutableStateOf(prefs.getString("pref_card_style", "Default") ?: "Default") }
+
+    DisposableEffect(Unit) {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            if (key == "pref_card_style") {
+                currentCardStyle.value = sharedPreferences.getString("pref_card_style", "Default") ?: "Default"
+            }
+        }
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        onDispose {
+            prefs.unregisterOnSharedPreferenceChangeListener(listener)
+        }
+    }
+
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     val displayGames = remember(games, searchQuery) {
@@ -507,91 +510,117 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
         if (games.isEmpty() && !isLoading) {
             EmptyState(modifier = Modifier.padding(padding))
         } else {
-            LazyColumn(
-                state = reorderState.listState,
-                contentPadding = PaddingValues(
-                    start = 20.dp,
-                    end = 20.dp,
-                    top = padding.calculateTopPadding(),
-                    bottom = 120.dp
-                ),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .reorderable(reorderState)
-            ) {
-                item {
+            if (currentCardStyle.value == "Horizontal" && searchQuery.isEmpty()) {
+                // Modalità Horizontal (OxygenOS style)
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = padding.calculateTopPadding())
+                ) {
                     if (!isEditMode) {
                         HomeSearchBar(
                             query = searchQuery,
                             onQueryChange = { searchQuery = it },
-                            modifier = Modifier.padding(bottom = 8.dp)
+                            modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
                         )
                     }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    HorizontalGamePager(
+                        games = displayGames,
+                        onLaunch = { game -> game.launchIntent?.let { context.startActivity(it) } },
+                        onStoreClick = { openPlayStore(it.packageName) }
+                    )
                 }
-
-                item {
-                    if (!isEditMode) {
-                        Text(
-                            text = "${displayGames.size} ${stringResource(R.string.games_count_suffix)}",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.secondary,
-                            modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(R.string.edit_mode_description),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
-                        )
-                    }
-                }
-
-                itemsIndexed(items = displayGames, key = { _, item -> item.packageName }) { index, game ->
-                    ReorderableItem(
-                        reorderState,
-                        key = game.packageName
-                    ) { isDragging ->
-                        val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
-
+            } else {
+                // Modalità Default (Lista verticale)
+                LazyColumn(
+                    state = reorderState.listState,
+                    contentPadding = PaddingValues(
+                        start = 20.dp,
+                        end = 20.dp,
+                        top = padding.calculateTopPadding(),
+                        bottom = 120.dp
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .reorderable(reorderState)
+                ) {
+                    item {
                         if (!isEditMode) {
-                            SwipeToDeleteContainer(item = game, onDelete = { gameToRemove = game }) {
-                                GameListItem(
-                                    game = game,
-                                    isEditMode = false,
-                                    onLaunch = { game.launchIntent?.let { context.startActivity(it) } },
-                                    onStoreClick = { openPlayStore(game.packageName) },
-                                    onLongPress = {
-                                        if (searchQuery.isEmpty()) isEditMode = true
-                                    }
-                                )
-                            }
+                            HomeSearchBar(
+                                query = searchQuery,
+                                onQueryChange = { searchQuery = it },
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                        }
+                    }
+
+                    item {
+                        if (!isEditMode) {
+                            Text(
+                                text = "${displayGames.size} ${stringResource(R.string.games_count_suffix)}",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.secondary,
+                                modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
+                            )
                         } else {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .shadow(elevation.value, RoundedCornerShape(24.dp))
-                                    .background(MaterialTheme.colorScheme.background)
-                                    .detectReorderAfterLongPress(reorderState)
-                            ) {
-                                GameListItem(
-                                    game = game,
-                                    isEditMode = true,
-                                    onLaunch = {},
-                                    onStoreClick = {},
-                                    onLongPress = {},
-                                    isDragging = isDragging
-                                )
+                            Text(
+                                text = stringResource(R.string.edit_mode_description),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
+                            )
+                        }
+                    }
+
+                    itemsIndexed(items = displayGames, key = { _, item -> item.packageName }) { index, game ->
+                        ReorderableItem(
+                            reorderState,
+                            key = game.packageName
+                        ) { isDragging ->
+                            val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
+
+                            if (!isEditMode) {
+                                SwipeToDeleteContainer(item = game, onDelete = { gameToRemove = game }) {
+                                    GameListItem(
+                                        game = game,
+                                        isEditMode = false,
+                                        onLaunch = { game.launchIntent?.let { context.startActivity(it) } },
+                                        onStoreClick = { openPlayStore(game.packageName) },
+                                        onLongPress = {
+                                            if (searchQuery.isEmpty()) isEditMode = true
+                                        }
+                                    )
+                                }
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .shadow(elevation.value, RoundedCornerShape(24.dp))
+                                        .background(MaterialTheme.colorScheme.background)
+                                        .detectReorderAfterLongPress(reorderState)
+                                ) {
+                                    GameListItem(
+                                        game = game,
+                                        isEditMode = true,
+                                        onLaunch = {},
+                                        onStoreClick = {},
+                                        onLongPress = {},
+                                        isDragging = isDragging
+                                    )
+                                }
                             }
                         }
                     }
-                }
 
-                if (!isEditMode && searchQuery.isEmpty()) {
-                    item {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        GetMoreGamesCard(context)
+                    if (!isEditMode && searchQuery.isEmpty()) {
+                        item {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            GetMoreGamesCard(context)
+                        }
                     }
                 }
             }
@@ -652,6 +681,104 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                 showAddSheet = false
             }
         )
+    }
+}
+
+@Composable
+fun HorizontalGamePager(
+    games: List<GameApp>,
+    onLaunch: (GameApp) -> Unit,
+    onStoreClick: (GameApp) -> Unit
+) {
+    val pagerState = rememberPagerState(pageCount = { games.size })
+
+    HorizontalPager(
+        state = pagerState,
+        contentPadding = PaddingValues(horizontal = 48.dp),
+        pageSpacing = 16.dp,
+        modifier = Modifier.fillMaxSize()
+    ) { page ->
+        val game = games[page]
+
+        val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
+        val scale = lerp(1f, 0.85f, pageOffset.absoluteValue.coerceIn(0f, 1f))
+        val alpha = lerp(1f, 0.5f, pageOffset.absoluteValue.coerceIn(0f, 1f))
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.85f)
+                .graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                    this.alpha = alpha
+                }
+                .clickable { onLaunch(game) },
+            shape = RoundedCornerShape(32.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                AsyncImage(
+                    model = game.icon,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(140.dp)
+                        .shadow(12.dp, CircleShape)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Text(
+                    text = game.name,
+                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                    textAlign = TextAlign.Center,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                IconButton(onClick = { onStoreClick(game) }) {
+                    Icon(
+                        imageVector = Icons.Outlined.ShoppingBag,
+                        contentDescription = "Store",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Button(
+                    onClick = { onLaunch(game) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(28.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                ) {
+                    Icon(Icons.Default.PlayArrow, null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.play),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                }
+            }
+        }
     }
 }
 
