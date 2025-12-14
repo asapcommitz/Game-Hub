@@ -2,13 +2,11 @@
 <resources>
     <style name="Theme.GameHub" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar">true</item> <!-- Icone scure -->
+        <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
-
-    <!-- Splash Screen Chiaro -->
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#F9F9FF</item> <!-- Sfondo chiaro -->
+        <item name="windowSplashScreenBackground">#F9F9FF</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
         <item name="postSplashScreenTheme">@style/Theme.GameHub</item>
     </style>

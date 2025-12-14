@@ -28,7 +28,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Nuova Activity Impostazioni -->
         <activity
             android:name=".SettingsActivity"
             android:exported="false"
