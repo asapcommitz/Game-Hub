@@ -41,7 +41,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.ShoppingBag
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.SportsEsports
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -437,13 +436,13 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
             LargeTopAppBar(
                 title = {
                     Text(
-                        text = if (isEditMode) "Modifica Ordine" else stringResource(R.string.app_name)
+                        text = if (isEditMode) stringResource(R.string.edit_mode_title) else stringResource(R.string.app_name)
                     )
                 },
                 navigationIcon = {
                     if (isEditMode) {
                         IconButton(onClick = { showSaveDialog = true }) {
-                            Icon(Icons.Default.Close, contentDescription = "Cancel")
+                            Icon(Icons.Default.Close, contentDescription = stringResource(R.string.discard))
                         }
                     }
                 },
@@ -453,14 +452,14 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                             viewModel.saveOrder(context)
                             isEditMode = false
                         }) {
-                            Icon(Icons.Default.Check, contentDescription = "Save Order")
+                            Icon(Icons.Default.Check, contentDescription = stringResource(R.string.save))
                         }
                     } else {
                         IconButton(onClick = {
                             val intent = Intent(context, SettingsActivity::class.java)
                             context.startActivity(intent)
                         }) {
-                            Icon(Icons.Default.Settings, contentDescription = "Settings")
+                            Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.settings_title))
                         }
                     }
                 },
@@ -520,7 +519,7 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                         )
                     } else {
                         Text(
-                            text = "Trascina per spostare",
+                            text = stringResource(R.string.edit_mode_description),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
@@ -581,22 +580,22 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
     if (showSaveDialog) {
         AlertDialog(
             onDismissRequest = { showSaveDialog = false },
-            title = { Text("Salvare l'ordine?") },
-            text = { Text("Vuoi salvare il nuovo ordine personalizzato dei giochi?") },
+            title = { Text(stringResource(R.string.save_order_title)) },
+            text = { Text(stringResource(R.string.save_order_description)) },
             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
             confirmButton = {
                 Button(onClick = {
                     viewModel.saveOrder(context)
                     isEditMode = false
                     showSaveDialog = false
-                }) { Text("Salva") }
+                }) { Text(stringResource(R.string.save)) }
             },
             dismissButton = {
                 TextButton(onClick = {
                     viewModel.loadGames(context)
                     isEditMode = false
                     showSaveDialog = false
-                }) { Text("Annulla") }
+                }) { Text(stringResource(R.string.discard)) }
             }
         )
     }

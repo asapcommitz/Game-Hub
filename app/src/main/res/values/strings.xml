@@ -14,4 +14,24 @@
     <string name="remove">Remove</string>
     <string name="play">Play</string>
     <string name="remove_action">Remove</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_header_appearance">Appearance</string>
+    <string name="settings_header_info">Information</string>
+    <string name="settings_theme_title">Theme</string>
+    <string name="settings_theme_system">System default</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_card_style_title">Card Style</string>
+    <string name="settings_card_style_default">Default</string>
+    <string name="settings_card_style_horizontal">Horizontal</string>
+    <string name="settings_card_style_grid">Grid</string>
+    <string name="settings_version_title">App Version</string>
+    <string name="settings_developer_title">Developer</string>
+    <string name="settings_developer_name">FeDeveloper95</string>
+    <string name="edit_mode_title">Edit Order</string>
+    <string name="edit_mode_description">Drag to move</string>
+    <string name="save_order_title">Save order?</string>
+    <string name="save_order_description">Save the new order?</string>
+    <string name="save">Save</string>
+    <string name="discard">Cancel</string>
 </resources>

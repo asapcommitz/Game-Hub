@@ -14,4 +14,24 @@
     <string name="remove">Rimuovi</string>
     <string name="play">Gioca</string>
     <string name="remove_action">Rimuovi</string>
+    <string name="settings_title">Impostazioni</string>
+    <string name="settings_header_appearance">Aspetto</string>
+    <string name="settings_header_info">Informazioni</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_theme_system">Predefinito di sistema</string>
+    <string name="settings_theme_light">Chiaro</string>
+    <string name="settings_theme_dark">Scuro</string>
+    <string name="settings_card_style_title">Stile Card</string>
+    <string name="settings_card_style_default">Predefinito</string>
+    <string name="settings_card_style_horizontal">Orizzontale</string>
+    <string name="settings_card_style_grid">Griglia</string>
+    <string name="settings_version_title">Versione App</string>
+    <string name="settings_developer_title">Sviluppatore</string>
+    <string name="settings_developer_name">FeDeveloper95</string>
+    <string name="edit_mode_title">Modifica Ordine</string>
+    <string name="edit_mode_description">Trascina per spostare</string>
+    <string name="save_order_title">Salvare l\'ordine?</string>
+    <string name="save_order_description">Salvare il nuovo ordine?</string>
+    <string name="save">Salva</string>
+    <string name="discard">Annulla</string>
 </resources>
