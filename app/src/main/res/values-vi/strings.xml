@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Game Hub</string>
+    <string name="games_count_suffix">trò chơi sẵn sàng</string>
+    <string name="refresh">Làm mới</string>
+    <string name="add_game">Thêm trò chơi</string>
+    <string name="no_games_title">Không tìm thấy trò chơi nào</string>
+    <string name="no_games_subtitle">Nhấn + để thêm</string>
+    <string name="download_games">Tải trò chơi mới</string>
+    <string name="add_to_library">Thêm vào thư viện</string>
+    <string name="search_apps">Tìm kiếm ứng dụng...</string>
+    <string name="remove_game_title">Xóa trò chơi?</string>
+    <string name="remove_game_desc">Thao tác này sẽ xóa %1$s khỏi Game Hub.</string>
+    <string name="cancel">Hủy</string>
+    <string name="remove">Xóa</string>
+    <string name="play">Chơi</string>
+    <string name="remove_action">Xóa</string>
+    <string name="settings_title">Cài đặt</string>
+    <string name="settings_header_appearance">Giao diện</string>
+    <string name="settings_header_info">Thông tin</string>
+    <string name="settings_theme_title">Chủ đề</string>
+    <string name="settings_theme_system">Mặc định hệ thống</string>
+    <string name="settings_theme_light">Sáng</string>
+    <string name="settings_theme_dark">Tối</string>
+    <string name="settings_card_style_title">Kiểu thẻ</string>
+    <string name="settings_card_style_default">Mặc định</string>
+    <string name="settings_card_style_horizontal">Ngang</string>
+    <string name="settings_card_style_grid">Lưới</string>
+    <string name="settings_version_title">Phiên bản</string>
+    <string name="settings_developer_title">Nhà phát triển</string>
+    <string name="settings_developer_name">FeDeveloper95</string>
+    <string name="edit_mode_title">Chỉnh sửa thứ tự</string>
+    <string name="edit_mode_description">Kéo để di chuyển</string>
+    <string name="save_order_title">Lưu thứ tự?</string>
+    <string name="save_order_description">Lưu thứ tự mới?</string>
+    <string name="save">Lưu</string>
+    <string name="discard">Hủy</string>
+</resources>

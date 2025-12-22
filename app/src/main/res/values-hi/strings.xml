@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Game Hub</string>
+    <string name="games_count_suffix">गेम तैयार हैं</string>
+    <string name="refresh">रीफ्रेश करें</string>
+    <string name="add_game">गेम जोड़ें</string>
+    <string name="no_games_title">कोई गेम नहीं मिला</string>
+    <string name="no_games_subtitle">जोड़ने के लिए + दबाएं</string>
+    <string name="download_games">नए गेम प्राप्त करें</string>
+    <string name="add_to_library">लाइब्रेरी में जोड़ें</string>
+    <string name="search_apps">ऐप्स खोजें...</string>
+    <string name="remove_game_title">गेम हटाएँ?</string>
+    <string name="remove_game_desc">यह %1$s को Game Hub से हटा देगा।</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="remove">हटाएँ</string>
+    <string name="play">खेलें</string>
+    <string name="remove_action">हटाएँ</string>
+    <string name="settings_title">सेटिंग्स</string>
+    <string name="settings_header_appearance">दिखावट</string>
+    <string name="settings_header_info">जानकारी</string>
+    <string name="settings_theme_title">थीम</string>
+    <string name="settings_theme_system">सिस्टम डिफ़ॉल्ट</string>
+    <string name="settings_theme_light">लाइट</string>
+    <string name="settings_theme_dark">डार्क</string>
+    <string name="settings_card_style_title">कार्ड शैली</string>
+    <string name="settings_card_style_default">डिफ़ॉल्ट</string>
+    <string name="settings_card_style_horizontal">क्षैतिज (Horizontal)</string>
+    <string name="settings_card_style_grid">ग्रिड (Grid)</string>
+    <string name="settings_version_title">ऐप संस्करण</string>
+    <string name="settings_developer_title">डेवलपर</string>
+    <string name="settings_developer_name">FeDeveloper95</string>
+    <string name="edit_mode_title">क्रम बदलें</string>
+    <string name="edit_mode_description">ले जाने के लिए खींचें</string>
+    <string name="save_order_title">क्रम सहेजें?</string>
+    <string name="save_order_description">नया क्रम सहेजें?</string>
+    <string name="save">सहेजें</string>
+    <string name="discard">रद्द करें</string>
+</resources>
