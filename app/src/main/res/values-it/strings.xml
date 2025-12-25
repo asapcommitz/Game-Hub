@@ -25,13 +25,32 @@
     <string name="settings_card_style_default">Predefinito</string>
     <string name="settings_card_style_horizontal">Orizzontale</string>
     <string name="settings_card_style_grid">Griglia</string>
+    <string name="settings_show_get_more_title">Mostra Scarica Altri Giochi</string>
+    <string name="settings_show_get_more_desc">Mostra link allo store</string>
+    <string name="settings_show_launch_count_title">Mostra conteggio lanci</string>
+    <string name="settings_show_launch_count_desc">Mostra quante volte hai giocato</string>
     <string name="settings_version_title">Versione App</string>
     <string name="settings_developer_title">Sviluppatore</string>
     <string name="settings_developer_name">FeDeveloper95</string>
+    <string name="settings_report_title">Segnala Bug / Idee</string>
+    <string name="settings_report_desc">Chatta con lo sviluppatore su Telegram</string>
+    <string name="settings_check_updates_title">Cerca aggiornamenti</string>
+    <string name="settings_check_updates_desc">Trova l\'ultima versione</string>
     <string name="edit_mode_title">Modifica ordine</string>
     <string name="edit_mode_description">Trascina per spostare</string>
     <string name="save_order_title">Salvare l\'ordine?</string>
     <string name="save_order_description">Vuoi salvare il nuovo ordine?</string>
     <string name="save">Salva</string>
     <string name="discard">Annulla</string>
+
+    <string name="update_checking">Controllo...</string>
+    <string name="update_no_update">Hai l\'ultima versione</string>
+    <string name="update_latest_version_msg">Nessun aggiornamento disponibile al momento.</string>
+    <string name="update_available">Versione %1$s Disponibile!</string>
+    <string name="update_action">Aggiorna</string>
+    <string name="update_downloading">Scaricamento...</string>
+    <string name="update_error">Errore</string>
+    <string name="update_error_msg">Impossibile controllare o scaricare l\'aggiornamento.</string>
+    <string name="close">Chiudi</string>
+    <string name="later">Dopo</string>
 </resources>
