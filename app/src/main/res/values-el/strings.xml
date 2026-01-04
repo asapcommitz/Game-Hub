@@ -1,56 +1,121 @@
 <resources>
     <string name="app_name">Game Hub</string>
-    <string name="games_count_suffix">παιχνίδια</string>
+    <string name="games_count_suffix">παιχνίδια έτοιμα</string>
     <string name="refresh">Ανανέωση</string>
-    <string name="add_game">Προσθήκη</string>
-    <string name="no_games_title">Κανένα παιχνίδι</string>
+    <string name="add_game">Προσθήκη Παιχνιδιού</string>
+    <string name="search_apps">Αναζήτηση...</string>
+    <string name="cancel">Ακύρωση</string>
+    <string name="remove">Αφαίρεση</string>
+    <string name="play">Παίξε</string>
+    <string name="close">Κλείσιμο</string>
+    <string name="later">Αργότερα</string>
+    <string name="save">Αποθήκευση</string>
+    <string name="discard">Απόρριψη</string>
+
+    <string name="welcome_subtitle">Ο μινιμαλιστικός διαχειριστής παιχνιδιών σας.</string>
+    <string name="next">Επόμενο</string>
+    <string name="back">Πίσω</string>
+    <string name="get_started">Ξεκινήστε</string>
+
+    <string name="welcome_to">Καλώς ήρθατε στο</string>
+    <string name="welcome_preparing_subtitle">Ετοιμάζουμε τα πάντα για εσάς.</string>
+
+    <string name="perm_required">Απαιτείται</string>
+    <string name="perm_permissions">Άδειες</string>
+    <string name="perm_intro_text">Αυτές οι άδειες είναι προαιρετικές αλλά συνιστώνται.</string>
+
+    <string name="perm_notif_title">Ειδοποιήσεις</string>
+    <string name="perm_notif_desc">Μάθετε αμέσως για νέες ενημερώσεις.</string>
+
+    <string name="perm_install_title">Εγκατάσταση Εφαρμογών</string>
+    <string name="perm_install_desc">Απαιτείται για λήψη και εγκατάσταση ενημερώσεων.</string>
+
+    <string name="perm_dashboard_title">Πίνακας Παιχνιδιών</string>
+    <string name="perm_dashboard_desc">Ενεργοποίηση επικάλυψης συστήματος για εργαλεία.</string>
+
+    <string name="feat_discover">Ανακάλυψη</string>
+    <string name="feat_features">Λειτουργίες</string>
+    <string name="feat_intro">Δείτε τι μπορείτε να κάνετε με το Game Hub.</string>
+
+    <string name="feat_order_title">Απόλυτος Έλεγχος</string>
+    <string name="feat_order_desc">Πατήστε παρατεταμένα για επεξεργασία. Σύρετε για ταξινόμηση.</string>
+
+    <string name="feat_layout_title">Αλλαγή Μορφής</string>
+    <string name="feat_layout_desc">Αλλάξτε στυλ στις Ρυθμίσεις: Προεπιλογή, Οριζόντιο ή Πλέγμα.</string>
+
+    <string name="feat_name_title">Προσωπική Πινελιά</string>
+    <string name="feat_name_desc">Εμφανίστε το όνομά σας. Προσαρμόστε ή κρύψτε το στις Ρυθμίσεις.</string>
+
+    <string name="feat_manage_title">Εύκολη Διαχείριση</string>
+    <string name="feat_manage_desc">Πατήστε + για προσθήκη εφαρμογής. Σύρετε δεξιά για αφαίρεση.</string>
+
+    <string name="feat_update_title">Μείνετε Ενημερωμένοι</string>
+    <string name="feat_update_desc">Ελέγξτε για ενημερώσεις του Game Hub στις Ρυθμίσεις.</string>
+
+    <string name="feat_store_title">Νέα Παιχνίδια</string>
+    <string name="feat_store_desc">Βρείτε νέους τίτλους μέσω Google Play Store. Απενεργοποιείται.</string>
+
+    <string name="feat_history_title">Ιστορικό Παιχνιδιού</string>
+    <string name="feat_history_desc">Δείτε πόσες φορές παίξατε. Μπορεί να κρυφτεί.</string>
+
+    <string name="no_games_title">Δεν βρέθηκαν παιχνίδια</string>
     <string name="no_games_subtitle">Πατήστε + για προσθήκη</string>
     <string name="download_games">Λήψη παιχνιδιών</string>
     <string name="add_to_library">Προσθήκη στη βιβλιοθήκη</string>
-    <string name="search_apps">Αναζήτηση...</string>
-    <string name="remove_game_title">Αφαίρεση;</string>
+    <string name="remove_game_title">Αφαίρεση παιχνιδιού;</string>
     <string name="remove_game_desc">Αυτό θα αφαιρέσει το %1$s από το Game Hub.</string>
-    <string name="cancel">Ακύρωση</string>
-    <string name="remove">Αφαίρεση</string>
-    <string name="play">Παίξτε</string>
     <string name="remove_action">Αφαίρεση</string>
+
+    <string name="edit_mode_title">Επεξεργασία Σειράς</string>
+    <string name="edit_mode_description">Σύρετε για μετακίνηση</string>
+    <string name="save_order_title">Αποθήκευση;</string>
+    <string name="save_order_description">Θέλετε να αποθηκεύσετε τη νέα σειρά;</string>
+
     <string name="settings_title">Ρυθμίσεις</string>
     <string name="settings_header_appearance">Εμφάνιση</string>
+    <string name="settings_header_preferences">Προτιμήσεις</string>
     <string name="settings_header_info">Πληροφορίες</string>
+
     <string name="settings_theme_title">Θέμα</string>
-    <string name="settings_theme_system">Σύστημα</string>
+    <string name="settings_theme_system">Συστήματος</string>
     <string name="settings_theme_light">Φωτεινό</string>
     <string name="settings_theme_dark">Σκοτεινό</string>
-    <string name="settings_card_style_title">Στυλ κάρτας</string>
+    <string name="settings_card_style_title">Στυλ Κάρτας</string>
     <string name="settings_card_style_default">Προεπιλογή</string>
     <string name="settings_card_style_horizontal">Οριζόντιο</string>
     <string name="settings_card_style_grid">Πλέγμα</string>
-    <string name="settings_show_get_more_title">Εμφάνιση Λήψης</string>
-    <string name="settings_show_get_more_desc">Σύνδεσμος καταστήματος</string>
-    <string name="settings_show_launch_count_title">Μετρητής παιχνιδιών</string>
-    <string name="settings_show_launch_count_desc">Δείχνει πόσες φορές παίξατε</string>
+
+    <string name="settings_show_name_title">Εμφάνιση Ονόματος</string>
+    <string name="settings_show_name_desc">Προβολή ονόματος στην επικεφαλίδα</string>
+    <string name="settings_edit_name_title">Το Όνομά Σας</string>
+    <string name="settings_edit_name_desc">Πατήστε για επεξεργασία του ονόματος</string>
+    <string name="dialog_edit_name_title">Εισάγετε το όνομά σας</string>
+    <string name="dialog_edit_name_hint">Όνομα</string>
+
+    <string name="settings_show_launch_count_title">Μετρητής εκκινήσεων</string>
+    <string name="settings_show_launch_count_desc">Εμφάνιση φορών που παίξατε</string>
+    <string name="settings_show_get_more_title">Σύνδεσμος Καταστήματος</string>
+    <string name="settings_show_get_more_desc">Εμφάνιση συνδέσμου Play Store</string>
+    <string name="settings_google_play_title">Πίνακας Παιχνιδιών</string>
+    <string name="settings_google_play_desc">Διαχείριση στις ρυθμίσεις GMS</string>
+
     <string name="settings_version_title">Έκδοση</string>
     <string name="settings_developer_title">Προγραμματιστής</string>
     <string name="settings_developer_name">FeDeveloper95</string>
-    <string name="settings_report_title">Αναφορά σφάλματος</string>
+    <string name="settings_report_title">Αναφορά Σφάλματος</string>
     <string name="settings_report_desc">Συνομιλία στο Telegram</string>
+
     <string name="settings_check_updates_title">Έλεγχος ενημερώσεων</string>
-    <string name="settings_check_updates_desc">Εύρεση νέας έκδοσης</string>
-    <string name="edit_mode_title">Επεξεργασία σειράς</string>
-    <string name="edit_mode_description">Σύρετε για μετακίνηση</string>
-    <string name="save_order_title">Αποθήκευση;</string>
-    <string name="save_order_description">Αποθήκευση νέας σειράς;</string>
-    <string name="save">Αποθήκευση</string>
-    <string name="discard">Ακύρωση</string>
+    <string name="settings_check_updates_desc">Εύρεση τελευταίας έκδοσης</string>
+    <string name="settings_auto_updates_title">Αυτόματες ενημερώσεις</string>
+    <string name="settings_auto_updates_desc">Έλεγχος κατά την εκκίνηση</string>
 
     <string name="update_checking">Έλεγχος...</string>
     <string name="update_no_update">Έχετε την τελευταία έκδοση</string>
-    <string name="update_latest_version_msg">Καμία διαθέσιμη ενημέρωση.</string>
+    <string name="update_latest_version_msg">Καμία ενημέρωση διαθέσιμη.</string>
     <string name="update_available">Έκδοση %1$s Διαθέσιμη!</string>
     <string name="update_action">Ενημέρωση</string>
     <string name="update_downloading">Λήψη...</string>
     <string name="update_error">Σφάλμα</string>
-    <string name="update_error_msg">Αποτυχία ενημέρωσης.</string>
-    <string name="close">Κλείσιμο</string>
-    <string name="later">Αργότερα</string>
+    <string name="update_error_msg">Αποτυχία ελέγχου ή λήψης.</string>
 </resources>

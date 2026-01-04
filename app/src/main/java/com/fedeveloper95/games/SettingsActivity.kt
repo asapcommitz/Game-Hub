@@ -1,5 +1,7 @@
 package com.fedeveloper95.games
 
+import android.app.Activity
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -9,9 +11,14 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -30,14 +37,21 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingBag
+import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material.icons.filled.SystemUpdate
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.ViewAgenda
+import androidx.compose.material.icons.rounded.SportsEsports
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -51,10 +65,13 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,23 +102,57 @@ const val CARD_STYLE_GRID = "Grid"
 
 const val PREF_SHOW_GET_MORE_GAMES = "pref_show_get_more_games"
 const val PREF_SHOW_LAUNCH_COUNT = "pref_show_launch_count"
+const val PREF_AUTO_UPDATES = "pref_auto_updates"
+
+const val PREF_SHOW_USER_NAME = "pref_show_user_name"
+const val PREF_USER_NAME = "pref_user_name"
+
+const val PREF_SORT_TYPE = "pref_sort_type"
+const val PREF_SHOW_PLAY_TIME = "pref_show_play_time"
+const val PREF_STATS_INTERVAL = "pref_stats_interval"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(onBack: () -> Unit) {
     val context = LocalContext.current
+    fun Context.findActivity(): Activity? = when (this) {
+        is Activity -> this
+        is android.content.ContextWrapper -> baseContext.findActivity()
+        else -> null
+    }
+
+    val activity = context.findActivity()
     val scope = rememberCoroutineScope()
     val prefs = remember { context.getSharedPreferences("game_hub_settings", Context.MODE_PRIVATE) }
 
     var currentTheme by remember { mutableIntStateOf(prefs.getInt(PREF_THEME, THEME_SYSTEM)) }
     var currentCardStyle by remember { mutableStateOf(prefs.getString(PREF_CARD_STYLE, CARD_STYLE_DEFAULT) ?: CARD_STYLE_DEFAULT) }
+    var currentSortType by remember { mutableStateOf(prefs.getString(PREF_SORT_TYPE, "Alphabetical") ?: "Alphabetical") }
+
     var showGetMoreGames by remember { mutableStateOf(prefs.getBoolean(PREF_SHOW_GET_MORE_GAMES, true)) }
     var showLaunchCount by remember { mutableStateOf(prefs.getBoolean(PREF_SHOW_LAUNCH_COUNT, true)) }
+    var showPlayTime by remember { mutableStateOf(prefs.getBoolean(PREF_SHOW_PLAY_TIME, true)) }
+    var statsInterval by remember { mutableFloatStateOf(prefs.getFloat(PREF_STATS_INTERVAL, 3f)) }
+    var autoUpdates by remember { mutableStateOf(prefs.getBoolean(PREF_AUTO_UPDATES, true)) }
+
+    var showUserName by remember { mutableStateOf(prefs.getBoolean(PREF_SHOW_USER_NAME, true)) }
+    var userName by remember { mutableStateOf(prefs.getString(PREF_USER_NAME, "User") ?: "User") }
 
     var showThemeDialog by remember { mutableStateOf(false) }
     var showStyleDialog by remember { mutableStateOf(false) }
-    var showUpdateDialog by remember { mutableStateOf(false) }
+    var showSortDialog by remember { mutableStateOf(false) }
+    var showNameDialog by remember { mutableStateOf(false) }
+
+    val openUpdateDialog = remember { activity?.intent?.getBooleanExtra("EXTRA_OPEN_UPDATE_DIALOG", false) == true }
+    var showUpdateDialog by remember { mutableStateOf(openUpdateDialog) }
+
     var updateStatus by remember { mutableStateOf<UpdateStatus>(UpdateStatus.Idle) }
+
+    val isPixel = remember {
+        val brand = Build.BRAND
+        val manufacturer = Build.MANUFACTURER
+        brand.equals("google", ignoreCase = true) || manufacturer.equals("google", ignoreCase = true)
+    }
 
     val appInfo = remember {
         try {
@@ -110,7 +161,7 @@ fun SettingsScreen(onBack: () -> Unit) {
             val build = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) pInfo.longVersionCode else pInfo.versionCode.toLong()
             "v$version ($build)"
         } catch (e: Exception) {
-            "Sconosciuto"
+            context.getString(R.string.unknown)
         }
     }
 
@@ -119,6 +170,14 @@ fun SettingsScreen(onBack: () -> Unit) {
             context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "1.0"
         } catch (e: Exception) {
             "1.0"
+        }
+    }
+
+    LaunchedEffect(openUpdateDialog) {
+        if (openUpdateDialog) {
+            updateStatus = UpdateStatus.Checking
+            val update = Updater.checkForUpdates(currentVersionName)
+            updateStatus = if (update != null) UpdateStatus.Available(update) else UpdateStatus.NoUpdate
         }
     }
 
@@ -197,6 +256,73 @@ fun SettingsScreen(onBack: () -> Unit) {
 
             Spacer(modifier = Modifier.height(2.dp))
 
+            val nameSwitchShape = if (showUserName) {
+                RoundedCornerShape(4.dp)
+            } else {
+                RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp)
+            }
+
+            SettingsSwitchCard(
+                icon = Icons.Default.Person,
+                title = stringResource(R.string.settings_show_name_title),
+                subtitle = stringResource(R.string.settings_show_name_desc),
+                containerColor = Color(0xFFffb683),
+                iconColor = Color(0xFF753403),
+                shape = nameSwitchShape,
+                checked = showUserName,
+                onCheckedChange = {
+                    showUserName = it
+                    prefs.edit().putBoolean(PREF_SHOW_USER_NAME, it).apply()
+                }
+            )
+
+            AnimatedVisibility(
+                visible = showUserName,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically()
+            ) {
+                Column {
+                    Spacer(modifier = Modifier.height(2.dp))
+                    SettingsItemCard(
+                        icon = Icons.Default.Edit,
+                        title = stringResource(R.string.settings_edit_name_title),
+                        subtitle = userName,
+                        containerColor = Color(0xFFe7e0ec),
+                        iconColor = Color(0xFF49454f),
+                        shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp),
+                        onClick = { showNameDialog = true }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Text(
+                text = stringResource(R.string.settings_header_preferences),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontFamily = GoogleSansFlex,
+                    fontWeight = FontWeight.Normal
+                ),
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
+            )
+
+            SettingsItemCard(
+                icon = Icons.Default.Sort,
+                title = stringResource(R.string.settings_sort_title),
+                subtitle = when(currentSortType) {
+                    "Alphabetical" -> stringResource(R.string.sort_alphabetical)
+                    "Time" -> stringResource(R.string.sort_playtime)
+                    else -> stringResource(R.string.sort_custom)
+                },
+                containerColor = Color(0xFF67d4ff),
+                iconColor = Color(0xFF004e5d),
+                shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp, bottomStart = 4.dp, bottomEnd = 4.dp),
+                onClick = { showSortDialog = true }
+            )
+
+            Spacer(modifier = Modifier.height(2.dp))
+
             SettingsSwitchCard(
                 icon = Icons.Default.History,
                 title = stringResource(R.string.settings_show_launch_count_title),
@@ -213,19 +339,135 @@ fun SettingsScreen(onBack: () -> Unit) {
 
             Spacer(modifier = Modifier.height(2.dp))
 
+            val playTimeShape = if (showPlayTime) {
+                RoundedCornerShape(4.dp)
+            } else {
+                RoundedCornerShape(4.dp)
+            }
+
+            SettingsSwitchCard(
+                icon = Icons.Default.Timer,
+                title = stringResource(R.string.settings_show_playtime_title),
+                subtitle = stringResource(R.string.settings_show_playtime_desc),
+                containerColor = Color(0xFFffaee4),
+                iconColor = Color(0xFF8d0053),
+                shape = playTimeShape,
+                checked = showPlayTime,
+                onCheckedChange = {
+                    showPlayTime = it
+                    prefs.edit().putBoolean(PREF_SHOW_PLAY_TIME, it).apply()
+                }
+            )
+
+            AnimatedVisibility(
+                visible = showPlayTime,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically()
+            ) {
+                Column {
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(4.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .clip(CircleShape)
+                                        .background(Color(0xFFffb3ae)),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.DateRange,
+                                        contentDescription = null,
+                                        tint = Color(0xFF8a1a16),
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Column {
+                                    Text(
+                                        text = stringResource(R.string.settings_stats_interval_title),
+                                        fontFamily = GoogleSansFlex,
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                    Text(
+                                        text = when(statsInterval.roundToInt()) {
+                                            0 -> stringResource(R.string.interval_daily)
+                                            1 -> stringResource(R.string.interval_weekly)
+                                            2 -> stringResource(R.string.interval_monthly)
+                                            else -> stringResource(R.string.interval_yearly)
+                                        },
+                                        fontFamily = GoogleSansFlex,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Slider(
+                                value = statsInterval,
+                                onValueChange = {
+                                    statsInterval = it
+                                    prefs.edit().putFloat(PREF_STATS_INTERVAL, it).apply()
+                                },
+                                valueRange = 0f..3f,
+                                steps = 2,
+                                thumb = {
+                                    SliderDefaults.Thumb(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        thumbSize = androidx.compose.ui.unit.DpSize(20.dp, 20.dp)
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(2.dp))
+
+            val getMoreGamesShape = if (isPixel) RoundedCornerShape(4.dp) else RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp)
+
             SettingsSwitchCard(
                 icon = Icons.Default.ShoppingBag,
                 title = stringResource(R.string.settings_show_get_more_title),
                 subtitle = stringResource(R.string.settings_show_get_more_desc),
-                containerColor = Color(0xFFffaee4),
-                iconColor = Color(0xFF8d0053),
-                shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp),
+                containerColor = Color(0xFF67d4ff),
+                iconColor = Color(0xFF004e5d),
+                shape = getMoreGamesShape,
                 checked = showGetMoreGames,
                 onCheckedChange = {
                     showGetMoreGames = it
                     prefs.edit().putBoolean(PREF_SHOW_GET_MORE_GAMES, it).apply()
                 }
             )
+
+            if (isPixel) {
+                Spacer(modifier = Modifier.height(2.dp))
+
+                SettingsItemCard(
+                    icon = Icons.Rounded.SportsEsports,
+                    title = stringResource(R.string.settings_google_play_title),
+                    subtitle = stringResource(R.string.settings_google_play_desc),
+                    containerColor = Color(0xFF80da88),
+                    iconColor = Color(0xFF00522c),
+                    shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp),
+                    onClick = {
+                        try {
+                            val intent = Intent()
+                            intent.component = ComponentName("com.google.android.gms", "com.google.android.gms.gp.gameservice.SettingsActivity")
+                            context.startActivity(intent)
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Google Play Games not found", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                )
+            }
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -296,7 +538,7 @@ fun SettingsScreen(onBack: () -> Unit) {
                 subtitle = stringResource(R.string.settings_check_updates_desc),
                 containerColor = Color(0xFF67d4ff),
                 iconColor = Color(0xFF004e5d),
-                shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp),
+                shape = RoundedCornerShape(4.dp),
                 onClick = {
                     showUpdateDialog = true
                     updateStatus = UpdateStatus.Checking
@@ -307,8 +549,105 @@ fun SettingsScreen(onBack: () -> Unit) {
                 }
             )
 
+            Spacer(modifier = Modifier.height(2.dp))
+
+            SettingsSwitchCard(
+                icon = Icons.Default.Settings,
+                title = stringResource(R.string.settings_auto_updates_title),
+                subtitle = stringResource(R.string.settings_auto_updates_desc),
+                containerColor = Color(0xFFfcbd00),
+                iconColor = Color(0xFF6d3a01),
+                shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp),
+                checked = autoUpdates,
+                onCheckedChange = {
+                    autoUpdates = it
+                    prefs.edit().putBoolean(PREF_AUTO_UPDATES, it).apply()
+                }
+            )
+
             Spacer(modifier = Modifier.height(48.dp))
         }
+    }
+
+
+    if (showNameDialog) {
+        var tempName by remember { mutableStateOf(userName) }
+
+        val interactionSource = remember { MutableInteractionSource() }
+        val isPressed by interactionSource.collectIsPressedAsState()
+        val cornerPercent by animateIntAsState(
+            targetValue = if (isPressed) 15 else 50,
+            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+            label = "btnMorph"
+        )
+
+        AlertDialog(
+            onDismissRequest = { showNameDialog = false },
+            title = {
+                Text(
+                    text = stringResource(R.string.dialog_edit_name_title),
+                    fontFamily = GoogleSansFlex,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                OutlinedTextField(
+                    value = tempName,
+                    onValueChange = { tempName = it },
+                    label = {
+                        Text(
+                            text = stringResource(R.string.dialog_edit_name_hint),
+                            fontFamily = GoogleSansFlex
+                        )
+                    },
+                    textStyle = TextStyle(
+                        fontFamily = GoogleSansFlex,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    ),
+                    singleLine = true,
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        if (tempName.isNotBlank()) {
+                            userName = tempName
+                            prefs.edit().putString(PREF_USER_NAME, tempName).apply()
+                        }
+                        showNameDialog = false
+                    },
+                    shape = RoundedCornerShape(cornerPercent),
+                    interactionSource = interactionSource,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                ) {
+                    Text(
+                        text = stringResource(R.string.save),
+                        fontFamily = GoogleSansFlex,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showNameDialog = false }) {
+                    Text(
+                        text = stringResource(R.string.cancel),
+                        fontFamily = GoogleSansFlex,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        )
     }
 
     if (showThemeDialog) {
@@ -357,12 +696,45 @@ fun SettingsScreen(onBack: () -> Unit) {
         )
     }
 
+    if (showSortDialog) {
+        val options = listOf(
+            stringResource(R.string.sort_alphabetical),
+            stringResource(R.string.sort_playtime),
+            stringResource(R.string.sort_custom)
+        )
+        val currentIndex = when(currentSortType) {
+            "Alphabetical" -> 0
+            "Time" -> 1
+            else -> 2
+        }
+
+        ExpressiveSingleChoiceDialog(
+            icon = Icons.Default.Sort,
+            title = stringResource(R.string.settings_sort_title),
+            options = options,
+            selectedIndex = currentIndex,
+            onOptionSelected = { index ->
+                val newSort = when(index) {
+                    0 -> "Alphabetical"
+                    1 -> "Time"
+                    else -> "Custom"
+                }
+                currentSortType = newSort
+                prefs.edit().putString(PREF_SORT_TYPE, newSort).apply()
+                showSortDialog = false
+            },
+            onDismiss = { showSortDialog = false }
+        )
+    }
+
     if (showUpdateDialog) {
         UpdateDialog(
             status = updateStatus,
-            onDismiss = { showUpdateDialog = false },
+            onDismiss = {
+                showUpdateDialog = false
+                activity?.intent?.removeExtra("EXTRA_OPEN_UPDATE_DIALOG")
+            },
             onUpdate = { url ->
-                // Avvia il download e chiude il dialog perché DownloadManager lavora in background
                 Updater.startDownload(context, url, (updateStatus as UpdateStatus.Available).info.version)
                 showUpdateDialog = false
             }

@@ -1,56 +1,121 @@
 <resources>
     <string name="app_name">Game Hub</string>
-    <string name="games_count_suffix">個のゲーム</string>
+    <string name="games_count_suffix">本のゲーム</string>
     <string name="refresh">更新</string>
     <string name="add_game">ゲームを追加</string>
-    <string name="no_games_title">ゲームが見つかりません</string>
-    <string name="no_games_subtitle">+ を押して追加してください</string>
-    <string name="download_games">ゲームをダウンロード</string>
-    <string name="add_to_library">ライブラリに追加</string>
     <string name="search_apps">アプリを検索...</string>
-    <string name="remove_game_title">ゲームを削除しますか？</string>
-    <string name="remove_game_desc">Game Hubから %1$s が削除されます。</string>
     <string name="cancel">キャンセル</string>
     <string name="remove">削除</string>
     <string name="play">プレイ</string>
+    <string name="close">閉じる</string>
+    <string name="later">あとで</string>
+    <string name="save">保存</string>
+    <string name="discard">破棄</string>
+
+    <string name="welcome_subtitle">ミニマリストなゲーム管理アプリ。</string>
+    <string name="next">次へ</string>
+    <string name="back">戻る</string>
+    <string name="get_started">始める</string>
+
+    <string name="welcome_to">ようこそ</string>
+    <string name="welcome_preparing_subtitle">準備をしています。</string>
+
+    <string name="perm_required">必須</string>
+    <string name="perm_permissions">権限</string>
+    <string name="perm_intro_text">これらの権限は任意ですが、快適な動作のために推奨されます。</string>
+
+    <string name="perm_notif_title">通知</string>
+    <string name="perm_notif_desc">アップデート情報をすぐに受け取る。</string>
+
+    <string name="perm_install_title">アプリのインストール</string>
+    <string name="perm_install_desc">アップデートのダウンロードとインストールに必要です。</string>
+
+    <string name="perm_dashboard_title">ゲームダッシュボード</string>
+    <string name="perm_dashboard_desc">ツールとパフォーマンス向上のためシステムオーバーレイを有効化。</string>
+
+    <string name="feat_discover">発見</string>
+    <string name="feat_features">機能</string>
+    <string name="feat_intro">Game Hub でできること。</string>
+
+    <string name="feat_order_title">完全なコントロール</string>
+    <string name="feat_order_desc">カードを長押しして編集モードへ。ドラッグして並べ替えられます。</string>
+
+    <string name="feat_layout_title">レイアウト変更</string>
+    <string name="feat_layout_desc">設定でスタイルを変更：デフォルト、水平、またはグリッド。</string>
+
+    <string name="feat_name_title">パーソナルタッチ</string>
+    <string name="feat_name_desc">ヘッダーに名前を表示。設定でカスタマイズまたは非表示にできます。</string>
+
+    <string name="feat_manage_title">簡単な管理</string>
+    <string name="feat_manage_desc">+ をタップしてアプリを追加。カードを右にスワイプして削除。</string>
+
+    <string name="feat_update_title">最新の状態に</string>
+    <string name="feat_update_desc">アプリ設定から直接 Game Hub の更新を確認できます。</string>
+
+    <string name="feat_store_title">ゲームを探す</string>
+    <string name="feat_store_desc">Google Play ストアへのリンク。設定で無効化可能。</string>
+
+    <string name="feat_history_title">プレイ履歴</string>
+    <string name="feat_history_desc">各ゲームの起動回数を記録。設定で非表示にできます。</string>
+
+    <string name="no_games_title">ゲームが見つかりません</string>
+    <string name="no_games_subtitle">+ を押して追加してください</string>
+    <string name="download_games">新しいゲームを入手</string>
+    <string name="add_to_library">ライブラリに追加</string>
+    <string name="remove_game_title">ゲームを削除？</string>
+    <string name="remove_game_desc">%1$s を Game Hub から削除します。</string>
     <string name="remove_action">削除</string>
+
+    <string name="edit_mode_title">並び替え</string>
+    <string name="edit_mode_description">ドラッグして移動</string>
+    <string name="save_order_title">並び順を保存？</string>
+    <string name="save_order_description">新しい並び順を保存しますか？</string>
+
     <string name="settings_title">設定</string>
     <string name="settings_header_appearance">外観</string>
+    <string name="settings_header_preferences">設定</string>
     <string name="settings_header_info">情報</string>
+
     <string name="settings_theme_title">テーマ</string>
-    <string name="settings_theme_system">システム</string>
+    <string name="settings_theme_system">システム準拠</string>
     <string name="settings_theme_light">ライト</string>
     <string name="settings_theme_dark">ダーク</string>
     <string name="settings_card_style_title">カードスタイル</string>
     <string name="settings_card_style_default">デフォルト</string>
     <string name="settings_card_style_horizontal">水平</string>
     <string name="settings_card_style_grid">グリッド</string>
+
+    <string name="settings_show_name_title">ユーザー名を表示</string>
+    <string name="settings_show_name_desc">ヘッダーに名前を表示する</string>
+    <string name="settings_edit_name_title">あなたの名前</string>
+    <string name="settings_edit_name_desc">タップして表示名を編集</string>
+    <string name="dialog_edit_name_title">名前を入力</string>
+    <string name="dialog_edit_name_hint">名前</string>
+
+    <string name="settings_show_launch_count_title">起動回数を表示</string>
+    <string name="settings_show_launch_count_desc">プレイ回数を表示する</string>
     <string name="settings_show_get_more_title">ストアリンクを表示</string>
-    <string name="settings_show_get_more_desc">ストアへのリンクを表示します</string>
-    <string name="settings_show_launch_count_title">プレイ回数を表示</string>
-    <string name="settings_show_launch_count_desc">プレイした回数を表示します</string>
+    <string name="settings_show_get_more_desc">ストアへのリンクを表示</string>
+    <string name="settings_google_play_title">ゲームダッシュボード</string>
+    <string name="settings_google_play_desc">GMS設定で管理</string>
+
     <string name="settings_version_title">バージョン</string>
     <string name="settings_developer_title">開発者</string>
     <string name="settings_developer_name">FeDeveloper95</string>
-    <string name="settings_report_title">バグ報告 / 要望</string>
-    <string name="settings_report_desc">Telegramでチャット</string>
-    <string name="settings_check_updates_title">アップデートを確認</string>
+    <string name="settings_report_title">バグ報告 / 機能要望</string>
+    <string name="settings_report_desc">Telegramで開発者に連絡</string>
+
+    <string name="settings_check_updates_title">更新を確認</string>
     <string name="settings_check_updates_desc">最新バージョンを探す</string>
-    <string name="edit_mode_title">並び替え</string>
-    <string name="edit_mode_description">ドラッグして移動</string>
-    <string name="save_order_title">保存しますか？</string>
-    <string name="save_order_description">新しい順序を保存しますか？</string>
-    <string name="save">保存</string>
-    <string name="discard">破棄</string>
+    <string name="settings_auto_updates_title">自動更新</string>
+    <string name="settings_auto_updates_desc">起動時に確認する</string>
 
     <string name="update_checking">確認中...</string>
     <string name="update_no_update">最新バージョンです</string>
-    <string name="update_latest_version_msg">現在、利用可能なアップデートはありません。</string>
+    <string name="update_latest_version_msg">現在利用可能な更新はありません。</string>
     <string name="update_available">バージョン %1$s が利用可能です！</string>
-    <string name="update_action">アップデート</string>
+    <string name="update_action">更新</string>
     <string name="update_downloading">ダウンロード中...</string>
     <string name="update_error">エラー</string>
-    <string name="update_error_msg">アップデートに失敗しました。</string>
-    <string name="close">閉じる</string>
-    <string name="later">後で</string>
+    <string name="update_error_msg">確認またはダウンロードに失敗しました。</string>
 </resources>

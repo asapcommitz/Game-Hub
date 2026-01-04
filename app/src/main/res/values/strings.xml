@@ -3,20 +3,81 @@
     <string name="games_count_suffix">games ready</string>
     <string name="refresh">Refresh</string>
     <string name="add_game">Add Game</string>
+    <string name="search_apps">Search apps...</string>
+    <string name="cancel">Cancel</string>
+    <string name="remove">Remove</string>
+    <string name="play">Play</string>
+    <string name="close">Close</string>
+    <string name="later">Later</string>
+    <string name="save">Save</string>
+    <string name="discard">Cancel</string>
+
+    <string name="welcome_subtitle">Your minimalist game collection manager.</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="get_started">Get Started</string>
+
+    <string name="welcome_to">Welcome to</string>
+    <string name="welcome_preparing_subtitle">Let\'s get everything ready for you.</string>
+
+    <string name="perm_required">Required</string>
+    <string name="perm_permissions">Permissions</string>
+    <string name="perm_intro_text">These permissions are optional but highly recommended to keep Game Hub running smoothly.</string>
+
+    <string name="perm_notif_title">Notifications</string>
+    <string name="perm_notif_desc">Know immediately when a new update drops.</string>
+
+    <string name="perm_install_title">App Installation</string>
+    <string name="perm_install_desc">Required to download and install updates.</string>
+
+    <string name="perm_dashboard_title">Game Dashboard</string>
+    <string name="perm_dashboard_desc">Enable the system overlay for better performance and tools.</string>
+
+    <string name="perm_usage_desc">Required to track game playtime and launch stats.</string>
+
+    <string name="feat_discover">Discover</string>
+    <string name="feat_features">Features</string>
+    <string name="feat_intro">Here is what you can do with your new Game Hub.</string>
+
+    <string name="feat_order_title">Total Control</string>
+    <string name="feat_order_desc">Long press any card to enter Edit Mode. Drag to reorder your games exactly how you like them.</string>
+
+    <string name="feat_layout_title">Shape shifting</string>
+    <string name="feat_layout_desc">Go to Settings to change the card style: Default, Horizontal, or Grid. Make it yours.</string>
+
+    <string name="feat_name_title">Personal Touch</string>
+    <string name="feat_name_desc">Display your name in the header. Customize it or hide it in Settings.</string>
+
+    <string name="feat_manage_title">Easy Management</string>
+    <string name="feat_manage_desc">Tap + to add games. Swipe right to remove, swipe left to view playtime stats.</string>
+
+    <string name="feat_update_title">Stay Updated</string>
+    <string name="feat_update_desc">Check for Game Hub updates directly in the app Settings. Never miss a feature.</string>
+
+    <string name="feat_store_title">Discover Games</string>
+    <string name="feat_store_desc">Find new titles via the Google Play Store chip. You can disable this in Settings.</string>
+
+    <string name="feat_history_title">Play History</string>
+    <string name="feat_history_desc">Track how many times you have launched each game. This counter can be hidden in Settings.</string>
+
     <string name="no_games_title">No games found</string>
     <string name="no_games_subtitle">Press + to add one</string>
     <string name="download_games">Get new games</string>
     <string name="add_to_library">Add to library</string>
-    <string name="search_apps">Search apps...</string>
     <string name="remove_game_title">Remove Game?</string>
     <string name="remove_game_desc">This will remove %1$s from the Game Hub.</string>
-    <string name="cancel">Cancel</string>
-    <string name="remove">Remove</string>
-    <string name="play">Play</string>
     <string name="remove_action">Remove</string>
+
+    <string name="edit_mode_title">Edit Order</string>
+    <string name="edit_mode_description">Drag to move</string>
+    <string name="save_order_title">Save order?</string>
+    <string name="save_order_description">Save the new order?</string>
+
     <string name="settings_title">Settings</string>
     <string name="settings_header_appearance">Appearance</string>
+    <string name="settings_header_preferences">Preferences</string>
     <string name="settings_header_info">Information</string>
+
     <string name="settings_theme_title">Theme</string>
     <string name="settings_theme_system">System default</string>
     <string name="settings_theme_light">Light</string>
@@ -25,23 +86,46 @@
     <string name="settings_card_style_default">Default</string>
     <string name="settings_card_style_horizontal">Horizontal</string>
     <string name="settings_card_style_grid">Grid</string>
-    <string name="settings_show_get_more_title">Show Get More Games</string>
-    <string name="settings_show_get_more_desc">Show link to store</string>
+
+    <string name="settings_show_name_title">Show User Name</string>
+    <string name="settings_show_name_desc">Display your name in the header</string>
+    <string name="settings_edit_name_title">Your Name</string>
+    <string name="settings_edit_name_desc">Tap to edit the displayed name</string>
+    <string name="dialog_edit_name_title">Enter your name</string>
+    <string name="dialog_edit_name_hint">Name</string>
+
+    <string name="settings_sort_title">Game Order</string>
+    <string name="sort_alphabetical">Alphabetical</string>
+    <string name="sort_playtime">Play Time</string>
+    <string name="sort_custom">Custom</string>
+
     <string name="settings_show_launch_count_title">Show Launch Count</string>
     <string name="settings_show_launch_count_desc">Show how many times you played</string>
+
+    <string name="settings_show_playtime_title">Show Play Time</string>
+    <string name="settings_show_playtime_desc">Display usage statistics</string>
+
+    <string name="settings_stats_interval_title">Stats Interval</string>
+    <string name="interval_daily">Daily</string>
+    <string name="interval_weekly">Weekly</string>
+    <string name="interval_monthly">Monthly</string>
+    <string name="interval_yearly">Yearly</string>
+
+    <string name="settings_show_get_more_title">Show Get More Games</string>
+    <string name="settings_show_get_more_desc">Show link to store</string>
+    <string name="settings_google_play_title">Game Dashboard</string>
+    <string name="settings_google_play_desc">Manage in GMS settings</string>
+
     <string name="settings_version_title">App Version</string>
     <string name="settings_developer_title">Developer</string>
     <string name="settings_developer_name">FeDeveloper95</string>
     <string name="settings_report_title">Report Bug / Feature</string>
     <string name="settings_report_desc">Chat with developer on Telegram</string>
+
     <string name="settings_check_updates_title">Check for updates</string>
     <string name="settings_check_updates_desc">Find the latest version</string>
-    <string name="edit_mode_title">Edit Order</string>
-    <string name="edit_mode_description">Drag to move</string>
-    <string name="save_order_title">Save order?</string>
-    <string name="save_order_description">Save the new order?</string>
-    <string name="save">Save</string>
-    <string name="discard">Cancel</string>
+    <string name="settings_auto_updates_title">Automatic updates</string>
+    <string name="settings_auto_updates_desc">Check for updates on startup</string>
 
     <string name="update_checking">Checking...</string>
     <string name="update_no_update">You have the latest version</string>
@@ -51,6 +135,5 @@
     <string name="update_downloading">Downloading...</string>
     <string name="update_error">Error</string>
     <string name="update_error_msg">Could not check or download update.</string>
-    <string name="close">Close</string>
-    <string name="later">Later</string>
+    <string name="unknown">Unknown</string>
 </resources>
