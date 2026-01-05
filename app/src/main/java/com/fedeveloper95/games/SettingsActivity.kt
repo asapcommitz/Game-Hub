@@ -33,6 +33,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CloudDownload
@@ -50,6 +51,7 @@ import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material.icons.filled.SystemUpdate
 import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material.icons.rounded.SportsEsports
 import androidx.compose.material3.*
@@ -133,7 +135,7 @@ fun SettingsScreen(onBack: () -> Unit) {
     var showLaunchCount by remember { mutableStateOf(prefs.getBoolean(PREF_SHOW_LAUNCH_COUNT, true)) }
     var showPlayTime by remember { mutableStateOf(prefs.getBoolean(PREF_SHOW_PLAY_TIME, true)) }
     var statsInterval by remember { mutableFloatStateOf(prefs.getFloat(PREF_STATS_INTERVAL, 3f)) }
-    var autoUpdates by remember { mutableStateOf(prefs.getBoolean(PREF_AUTO_UPDATES, true)) }
+
 
     var showUserName by remember { mutableStateOf(prefs.getBoolean(PREF_SHOW_USER_NAME, true)) }
     var userName by remember { mutableStateOf(prefs.getString(PREF_USER_NAME, "User") ?: "User") }
@@ -409,6 +411,7 @@ fun SettingsScreen(onBack: () -> Unit) {
                                 }
                             }
                             Spacer(modifier = Modifier.height(16.dp))
+
                             Slider(
                                 value = statsInterval,
                                 onValueChange = {
@@ -416,13 +419,7 @@ fun SettingsScreen(onBack: () -> Unit) {
                                     prefs.edit().putFloat(PREF_STATS_INTERVAL, it).apply()
                                 },
                                 valueRange = 0f..3f,
-                                steps = 2,
-                                thumb = {
-                                    SliderDefaults.Thumb(
-                                        interactionSource = remember { MutableInteractionSource() },
-                                        thumbSize = androidx.compose.ui.unit.DpSize(20.dp, 20.dp)
-                                    )
-                                }
+                                steps = 2
                             )
                         }
                     }
@@ -431,7 +428,7 @@ fun SettingsScreen(onBack: () -> Unit) {
 
             Spacer(modifier = Modifier.height(2.dp))
 
-            val getMoreGamesShape = if (isPixel) RoundedCornerShape(4.dp) else RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp)
+            val getMoreGamesShape = if (isPixel) RoundedCornerShape(4.dp) else RoundedCornerShape(4.dp)
 
             SettingsSwitchCard(
                 icon = Icons.Default.ShoppingBag,
@@ -456,7 +453,7 @@ fun SettingsScreen(onBack: () -> Unit) {
                     subtitle = stringResource(R.string.settings_google_play_desc),
                     containerColor = Color(0xFF80da88),
                     iconColor = Color(0xFF00522c),
-                    shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp),
+                    shape = RoundedCornerShape(4.dp),
                     onClick = {
                         try {
                             val intent = Intent()
@@ -468,6 +465,21 @@ fun SettingsScreen(onBack: () -> Unit) {
                     }
                 )
             }
+
+            Spacer(modifier = Modifier.height(2.dp))
+
+            SettingsItemCard(
+                icon = Icons.Default.Tune,
+                title = stringResource(R.string.settings_advanced_title),
+                subtitle = stringResource(R.string.settings_advanced_desc),
+                containerColor = Color(0xFFC5C0FF),
+                iconColor = Color(0xFF2D237A),
+                shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp),
+                onClick = {
+                    val intent = Intent(context, AdvancedSettingsActivity::class.java)
+                    context.startActivity(intent)
+                }
+            )
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -538,7 +550,7 @@ fun SettingsScreen(onBack: () -> Unit) {
                 subtitle = stringResource(R.string.settings_check_updates_desc),
                 containerColor = Color(0xFF67d4ff),
                 iconColor = Color(0xFF004e5d),
-                shape = RoundedCornerShape(4.dp),
+                shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp),
                 onClick = {
                     showUpdateDialog = true
                     updateStatus = UpdateStatus.Checking
@@ -546,22 +558,6 @@ fun SettingsScreen(onBack: () -> Unit) {
                         val update = Updater.checkForUpdates(currentVersionName)
                         updateStatus = if (update != null) UpdateStatus.Available(update) else UpdateStatus.NoUpdate
                     }
-                }
-            )
-
-            Spacer(modifier = Modifier.height(2.dp))
-
-            SettingsSwitchCard(
-                icon = Icons.Default.Settings,
-                title = stringResource(R.string.settings_auto_updates_title),
-                subtitle = stringResource(R.string.settings_auto_updates_desc),
-                containerColor = Color(0xFFfcbd00),
-                iconColor = Color(0xFF6d3a01),
-                shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp),
-                checked = autoUpdates,
-                onCheckedChange = {
-                    autoUpdates = it
-                    prefs.edit().putBoolean(PREF_AUTO_UPDATES, it).apply()
                 }
             )
 
@@ -737,6 +733,13 @@ fun SettingsScreen(onBack: () -> Unit) {
             onUpdate = { url ->
                 Updater.startDownload(context, url, (updateStatus as UpdateStatus.Available).info.version)
                 showUpdateDialog = false
+            },
+            onCheckAgain = {
+                updateStatus = UpdateStatus.Checking
+                scope.launch {
+                    val update = Updater.checkForUpdates(currentVersionName)
+                    updateStatus = if (update != null) UpdateStatus.Available(update) else UpdateStatus.NoUpdate
+                }
             }
         )
     }
@@ -773,10 +776,42 @@ fun AnimatedUpdateButton(onClick: () -> Unit) {
 }
 
 @Composable
+fun AnimatedCheckAgainButton(onClick: () -> Unit) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val cornerPercent by animateIntAsState(
+        targetValue = if (isPressed) 15 else 50,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy, stiffness = Spring.StiffnessMedium),
+        label = "btnMorph"
+    )
+
+    Button(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth().height(56.dp),
+        shape = RoundedCornerShape(cornerPercent),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        interactionSource = interactionSource
+    ) {
+        Text(
+            text = stringResource(R.string.settings_check_updates_title),
+            fontFamily = GoogleSansFlex,
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.labelLarge
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
 fun UpdateDialog(
     status: UpdateStatus,
     onDismiss: () -> Unit,
-    onUpdate: (String) -> Unit
+    onUpdate: (String) -> Unit,
+    onCheckAgain: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -833,10 +868,8 @@ fun UpdateDialog(
                 when(status) {
                     is UpdateStatus.Checking -> {
                         Spacer(modifier = Modifier.height(16.dp))
-                        CircularProgressIndicator(
-                            strokeWidth = 4.dp,
-                            strokeCap = StrokeCap.Round,
-                            color = MaterialTheme.colorScheme.primary
+                        LoadingIndicator(
+                            modifier = Modifier.size(64.dp)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
@@ -885,16 +918,7 @@ fun UpdateDialog(
             if (status is UpdateStatus.Available) {
                 AnimatedUpdateButton(onClick = { onUpdate(status.info.downloadUrl) })
             } else if (status is UpdateStatus.NoUpdate || status is UpdateStatus.Error) {
-                TextButton(
-                    onClick = onDismiss,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        stringResource(R.string.close),
-                        fontFamily = GoogleSansFlex,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                AnimatedCheckAgainButton(onClick = onCheckAgain)
             }
         },
         dismissButton = {
@@ -905,6 +929,17 @@ fun UpdateDialog(
                 ) {
                     Text(
                         stringResource(R.string.later),
+                        fontFamily = GoogleSansFlex,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            } else if (status is UpdateStatus.NoUpdate || status is UpdateStatus.Error) {
+                TextButton(
+                    onClick = onDismiss,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        stringResource(R.string.close),
                         fontFamily = GoogleSansFlex,
                         fontWeight = FontWeight.Bold
                     )

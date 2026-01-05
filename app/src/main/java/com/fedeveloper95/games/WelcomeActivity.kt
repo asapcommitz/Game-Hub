@@ -60,6 +60,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -129,6 +130,10 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
     val scope = rememberCoroutineScope()
     val commonAnimSpec = tween<Float>(durationMillis = 200, easing = FastOutSlowInEasing)
 
+    val topCardShape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
+    val middleCardShape = RoundedCornerShape(4.dp)
+    val bottomCardShape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp)
+
     val customWelcomeFontFamily = FontFamily(
         Font(
             resId = R.font.sans_flex,
@@ -165,6 +170,12 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
 
     var hasUsageStatsPermission by remember {
         mutableStateOf(checkUsageStatsPermission(context))
+    }
+
+    val isPixel = remember {
+        val brand = Build.BRAND
+        val manufacturer = Build.MANUFACTURER
+        brand.equals("google", ignoreCase = true) || manufacturer.equals("google", ignoreCase = true)
     }
 
     var isLastPageScrolledToEnd by remember { mutableStateOf(false) }
@@ -280,123 +291,116 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
 
                     Spacer(modifier = Modifier.height(32.dp))
 
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                        ),
-                        shape = RoundedCornerShape(24.dp)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState())
                     ) {
-                        Column {
-                            PermissionRow(
-                                icon = Icons.Rounded.Notifications,
-                                iconColor = Color(0xFFffaee4),
-                                iconTint = Color(0xFF8d0053),
-                                title = stringResource(R.string.perm_notif_title),
-                                description = stringResource(R.string.perm_notif_desc),
-                                control = {
-                                    Switch(
-                                        checked = hasNotificationPermission,
-                                        onCheckedChange = {
-                                            if (hasNotificationPermission) {
-                                                val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                                                    putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-                                                }
-                                                context.startActivity(intent)
-                                            } else {
-                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                                    notificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                                                }
+                        PermissionCard(
+                            icon = Icons.Rounded.Notifications,
+                            iconColor = Color(0xFFffaee4),
+                            iconTint = Color(0xFF8d0053),
+                            title = stringResource(R.string.perm_notif_title),
+                            description = stringResource(R.string.perm_notif_desc),
+                            shape = topCardShape,
+                            control = {
+                                Switch(
+                                    checked = hasNotificationPermission,
+                                    onCheckedChange = {
+                                        if (hasNotificationPermission) {
+                                            val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                                                putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
                                             }
-                                        },
-                                        thumbContent = {
-                                            Icon(
-                                                imageVector = if (hasNotificationPermission) Icons.Rounded.Check else Icons.Rounded.Close,
-                                                contentDescription = null,
-                                                modifier = Modifier.size(16.dp)
-                                            )
+                                            context.startActivity(intent)
+                                        } else {
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                notificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                            }
                                         }
-                                    )
-                                },
-                                onClick = {
-                                    if (hasNotificationPermission) {
-                                        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                                            putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-                                        }
-                                        context.startActivity(intent)
-                                    } else {
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                            notificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                                        }
+                                    },
+                                    thumbContent = {
+                                        Icon(
+                                            imageVector = if (hasNotificationPermission) Icons.Rounded.Check else Icons.Rounded.Close,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                    }
+                                )
+                            },
+                            onClick = {
+                                if (hasNotificationPermission) {
+                                    val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                                        putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                                    }
+                                    context.startActivity(intent)
+                                } else {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                        notificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                                     }
                                 }
-                            )
+                            }
+                        )
 
-                            HorizontalDivider(
-                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                                modifier = Modifier.padding(horizontal = 16.dp)
-                            )
+                        Spacer(modifier = Modifier.height(2.dp))
 
-                            PermissionRow(
-                                icon = Icons.Rounded.Timer,
-                                iconColor = Color(0xFFd8b9fc),
-                                iconTint = Color(0xFF5629a4),
-                                title = stringResource(R.string.feat_history_title),
-                                description = stringResource(R.string.perm_usage_desc),
-                                control = {
-                                    Icon(
-                                        imageVector = if (hasUsageStatsPermission) Icons.Rounded.Check else Icons.Rounded.ChevronRight,
-                                        contentDescription = null,
-                                        tint = if (hasUsageStatsPermission) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                },
-                                onClick = {
-                                    if (!hasUsageStatsPermission) {
-                                        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
-                                        context.startActivity(intent)
-                                    }
+                        PermissionCard(
+                            icon = Icons.Rounded.Timer,
+                            iconColor = Color(0xFFd8b9fc),
+                            iconTint = Color(0xFF5629a4),
+                            title = stringResource(R.string.feat_history_title),
+                            description = stringResource(R.string.perm_usage_desc),
+                            shape = middleCardShape,
+                            control = {
+                                Icon(
+                                    imageVector = if (hasUsageStatsPermission) Icons.Rounded.Check else Icons.Rounded.ChevronRight,
+                                    contentDescription = null,
+                                    tint = if (hasUsageStatsPermission) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            },
+                            onClick = {
+                                if (!hasUsageStatsPermission) {
+                                    val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                                    context.startActivity(intent)
                                 }
-                            )
+                            }
+                        )
 
-                            HorizontalDivider(
-                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                                modifier = Modifier.padding(horizontal = 16.dp)
-                            )
+                        Spacer(modifier = Modifier.height(2.dp))
 
-                            PermissionRow(
-                                icon = Icons.Rounded.SystemUpdate,
-                                iconColor = Color(0xFFffb683),
-                                iconTint = Color(0xFF753403),
-                                title = stringResource(R.string.perm_install_title),
-                                description = stringResource(R.string.perm_install_desc),
-                                control = {
-                                    Icon(
-                                        imageVector = Icons.Rounded.ChevronRight,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                },
-                                onClick = {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                        val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
-                                            data = Uri.parse("package:${context.packageName}")
-                                        }
-                                        installParamsLauncher.launch(intent)
+                        PermissionCard(
+                            icon = Icons.Rounded.SystemUpdate,
+                            iconColor = Color(0xFFffb683),
+                            iconTint = Color(0xFF753403),
+                            title = stringResource(R.string.perm_install_title),
+                            description = stringResource(R.string.perm_install_desc),
+                            shape = if (isPixel) middleCardShape else bottomCardShape,
+                            control = {
+                                Icon(
+                                    imageVector = Icons.Rounded.ChevronRight,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            },
+                            onClick = {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
+                                        data = Uri.parse("package:${context.packageName}")
                                     }
+                                    installParamsLauncher.launch(intent)
                                 }
-                            )
+                            }
+                        )
 
-                            HorizontalDivider(
-                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                                modifier = Modifier.padding(horizontal = 16.dp)
-                            )
+                        if (isPixel) {
+                            Spacer(modifier = Modifier.height(2.dp))
 
-                            PermissionRow(
+                            PermissionCard(
                                 icon = Icons.Rounded.SportsEsports,
                                 iconColor = Color(0xFF67d4ff),
                                 iconTint = Color(0xFF004e5d),
                                 title = stringResource(R.string.perm_dashboard_title),
                                 description = stringResource(R.string.perm_dashboard_desc),
+                                shape = bottomCardShape,
                                 control = {
                                     Icon(
                                         imageVector = Icons.Rounded.ChevronRight,
@@ -415,9 +419,9 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
                                 }
                             )
                         }
-                    }
 
-                    Spacer(modifier = Modifier.weight(1f))
+                        Spacer(modifier = Modifier.height(100.dp))
+                    }
                 }
             }
         ),
@@ -474,101 +478,80 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
                                 .fillMaxSize()
                                 .verticalScroll(scrollState)
                         ) {
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                                ),
-                                shape = RoundedCornerShape(24.dp)
-                            ) {
-                                Column {
-                                    FeatureItem(
-                                        icon = Icons.Rounded.DragHandle,
-                                        iconColor = Color(0xFFfcbd00),
-                                        iconTint = Color(0xFF6d3a01),
-                                        title = stringResource(R.string.feat_order_title),
-                                        description = stringResource(R.string.feat_order_desc)
-                                    )
+                            FeatureCard(
+                                icon = Icons.Rounded.DragHandle,
+                                iconColor = Color(0xFFfcbd00),
+                                iconTint = Color(0xFF6d3a01),
+                                title = stringResource(R.string.feat_order_title),
+                                description = stringResource(R.string.feat_order_desc),
+                                shape = topCardShape
+                            )
 
-                                    HorizontalDivider(
-                                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                                        modifier = Modifier.padding(horizontal = 16.dp)
-                                    )
+                            Spacer(modifier = Modifier.height(2.dp))
 
-                                    FeatureItem(
-                                        icon = Icons.Rounded.GridView,
-                                        iconColor = Color(0xFF80da88),
-                                        iconTint = Color(0xFF00522c),
-                                        title = stringResource(R.string.feat_layout_title),
-                                        description = stringResource(R.string.feat_layout_desc)
-                                    )
+                            FeatureCard(
+                                icon = Icons.Rounded.GridView,
+                                iconColor = Color(0xFF80da88),
+                                iconTint = Color(0xFF00522c),
+                                title = stringResource(R.string.feat_layout_title),
+                                description = stringResource(R.string.feat_layout_desc),
+                                shape = middleCardShape
+                            )
 
-                                    HorizontalDivider(
-                                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                                        modifier = Modifier.padding(horizontal = 16.dp)
-                                    )
+                            Spacer(modifier = Modifier.height(2.dp))
 
-                                    FeatureItem(
-                                        icon = Icons.Rounded.Person,
-                                        iconColor = Color(0xFFffb683),
-                                        iconTint = Color(0xFF753403),
-                                        title = stringResource(R.string.feat_name_title),
-                                        description = stringResource(R.string.feat_name_desc)
-                                    )
+                            FeatureCard(
+                                icon = Icons.Rounded.Person,
+                                iconColor = Color(0xFFffb683),
+                                iconTint = Color(0xFF753403),
+                                title = stringResource(R.string.feat_name_title),
+                                description = stringResource(R.string.feat_name_desc),
+                                shape = middleCardShape
+                            )
 
-                                    HorizontalDivider(
-                                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                                        modifier = Modifier.padding(horizontal = 16.dp)
-                                    )
+                            Spacer(modifier = Modifier.height(2.dp))
 
-                                    FeatureItem(
-                                        icon = Icons.Rounded.SwipeRight,
-                                        iconColor = Color(0xFFffb3ae),
-                                        iconTint = Color(0xFF8a1a16),
-                                        title = stringResource(R.string.feat_manage_title),
-                                        description = stringResource(R.string.feat_manage_desc)
-                                    )
+                            FeatureCard(
+                                icon = Icons.Rounded.SwipeRight,
+                                iconColor = Color(0xFFffb3ae),
+                                iconTint = Color(0xFF8a1a16),
+                                title = stringResource(R.string.feat_manage_title),
+                                description = stringResource(R.string.feat_manage_desc),
+                                shape = middleCardShape
+                            )
 
-                                    HorizontalDivider(
-                                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                                        modifier = Modifier.padding(horizontal = 16.dp)
-                                    )
+                            Spacer(modifier = Modifier.height(2.dp))
 
-                                    FeatureItem(
-                                        icon = Icons.Rounded.ShoppingBag,
-                                        iconColor = Color(0xFFffaee4),
-                                        iconTint = Color(0xFF8d0053),
-                                        title = stringResource(R.string.feat_store_title),
-                                        description = stringResource(R.string.feat_store_desc)
-                                    )
+                            FeatureCard(
+                                icon = Icons.Rounded.ShoppingBag,
+                                iconColor = Color(0xFFffaee4),
+                                iconTint = Color(0xFF8d0053),
+                                title = stringResource(R.string.feat_store_title),
+                                description = stringResource(R.string.feat_store_desc),
+                                shape = middleCardShape
+                            )
 
-                                    HorizontalDivider(
-                                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                                        modifier = Modifier.padding(horizontal = 16.dp)
-                                    )
+                            Spacer(modifier = Modifier.height(2.dp))
 
-                                    FeatureItem(
-                                        icon = Icons.Rounded.History,
-                                        iconColor = Color(0xFFd8b9fc),
-                                        iconTint = Color(0xFF5629a4),
-                                        title = stringResource(R.string.feat_history_title),
-                                        description = stringResource(R.string.feat_history_desc)
-                                    )
+                            FeatureCard(
+                                icon = Icons.Rounded.History,
+                                iconColor = Color(0xFFd8b9fc),
+                                iconTint = Color(0xFF5629a4),
+                                title = stringResource(R.string.feat_history_title),
+                                description = stringResource(R.string.feat_history_desc),
+                                shape = middleCardShape
+                            )
 
-                                    HorizontalDivider(
-                                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                                        modifier = Modifier.padding(horizontal = 16.dp)
-                                    )
+                            Spacer(modifier = Modifier.height(2.dp))
 
-                                    FeatureItem(
-                                        icon = Icons.Rounded.SystemUpdate,
-                                        iconColor = Color(0xFF67d4ff),
-                                        iconTint = Color(0xFF004e5d),
-                                        title = stringResource(R.string.feat_update_title),
-                                        description = stringResource(R.string.feat_update_desc)
-                                    )
-                                }
-                            }
+                            FeatureCard(
+                                icon = Icons.Rounded.SystemUpdate,
+                                iconColor = Color(0xFF67d4ff),
+                                iconTint = Color(0xFF004e5d),
+                                title = stringResource(R.string.feat_update_title),
+                                description = stringResource(R.string.feat_update_desc),
+                                shape = bottomCardShape
+                            )
 
                             Spacer(modifier = Modifier.height(100.dp))
                         }
@@ -794,106 +777,122 @@ fun RotatingShapeContainer(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun PermissionRow(
+fun PermissionCard(
     icon: ImageVector,
     iconColor: Color,
     iconTint: Color,
     title: String,
     description: String,
+    shape: Shape,
     control: @Composable () -> Unit,
     onClick: () -> Unit
 ) {
-    ListItem(
-        headlineContent = {
-            Text(
-                text = title,
-                fontFamily = GoogleSansFlex,
-                fontWeight = FontWeight.Normal,
-                style = MaterialTheme.typography.titleMedium
-            )
-        },
-        supportingContent = {
-            Text(
-                text = description,
-                fontFamily = GoogleSansFlex,
-                fontWeight = FontWeight.Normal,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        },
-        leadingContent = {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .background(iconColor),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = iconTint,
-                    modifier = Modifier.size(24.dp)
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = shape,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        ListItem(
+            headlineContent = {
+                Text(
+                    text = title,
+                    fontFamily = GoogleSansFlex,
+                    fontWeight = FontWeight.Normal,
+                    style = MaterialTheme.typography.titleMedium
                 )
-            }
-        },
-        trailingContent = control,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        colors = ListItemDefaults.colors(
-            containerColor = Color.Transparent
+            },
+            supportingContent = {
+                Text(
+                    text = description,
+                    fontFamily = GoogleSansFlex,
+                    fontWeight = FontWeight.Normal,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            leadingContent = {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(iconColor),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = iconTint,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            },
+            trailingContent = control,
+            modifier = Modifier
+                .clickable(onClick = onClick)
+                .padding(vertical = 4.dp),
+            colors = ListItemDefaults.colors(
+                containerColor = Color.Transparent
+            )
         )
-    )
+    }
 }
 
 @Composable
-fun FeatureItem(
+fun FeatureCard(
     icon: ImageVector,
     iconColor: Color,
     iconTint: Color,
     title: String,
-    description: String
+    description: String,
+    shape: Shape
 ) {
-    ListItem(
-        headlineContent = {
-            Text(
-                text = title,
-                fontFamily = GoogleSansFlex,
-                fontWeight = FontWeight.Normal,
-                style = MaterialTheme.typography.titleMedium
-            )
-        },
-        supportingContent = {
-            Text(
-                text = description,
-                fontFamily = GoogleSansFlex,
-                fontWeight = FontWeight.Normal,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        },
-        leadingContent = {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .background(iconColor),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = iconTint,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-        },
+    Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = ListItemDefaults.colors(
-            containerColor = Color.Transparent
+        shape = shape,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        ListItem(
+            headlineContent = {
+                Text(
+                    text = title,
+                    fontFamily = GoogleSansFlex,
+                    fontWeight = FontWeight.Normal,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            },
+            supportingContent = {
+                Text(
+                    text = description,
+                    fontFamily = GoogleSansFlex,
+                    fontWeight = FontWeight.Normal,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            leadingContent = {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(iconColor),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = iconTint,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            },
+            modifier = Modifier.padding(vertical = 4.dp),
+            colors = ListItemDefaults.colors(
+                containerColor = Color.Transparent
+            )
         )
-    )
+    }
 }
 
 @Composable

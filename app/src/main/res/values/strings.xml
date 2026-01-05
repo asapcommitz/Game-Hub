@@ -116,6 +116,9 @@
     <string name="settings_google_play_title">Game Dashboard</string>
     <string name="settings_google_play_desc">Manage in GMS settings</string>
 
+    <string name="settings_advanced_title">Advanced</string>
+    <string name="settings_advanced_desc">Experimental features and updates</string>
+
     <string name="settings_version_title">App Version</string>
     <string name="settings_developer_title">Developer</string>
     <string name="settings_developer_name">FeDeveloper95</string>

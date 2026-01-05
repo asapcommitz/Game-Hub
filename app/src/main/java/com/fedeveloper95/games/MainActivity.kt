@@ -106,11 +106,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.burnoutcrew.reorderable.ReorderableItem
-import org.burnoutcrew.reorderable.detectReorderAfterLongPress
-import org.burnoutcrew.reorderable.rememberReorderableLazyGridState
-import org.burnoutcrew.reorderable.rememberReorderableLazyListState
-import org.burnoutcrew.reorderable.reorderable
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyGridState
+import sh.calvin.reorderable.rememberReorderableLazyListState
 import java.util.Calendar
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
@@ -426,6 +424,12 @@ class GameViewModel : ViewModel() {
         prefs.edit().putString(GAME_ORDER_PREF, orderString).apply()
     }
 
+    fun switchToCustomSort(context: Context) {
+        saveOrder(context)
+        val prefs = context.getSharedPreferences("game_hub_settings", Context.MODE_PRIVATE)
+        prefs.edit().putString(PREF_SORT_TYPE, "Custom").apply()
+    }
+
     private fun getSavedOrder(context: Context): List<String> {
         val prefs = context.getSharedPreferences("game_hub_prefs", Context.MODE_PRIVATE)
         val orderString = prefs.getString(GAME_ORDER_PREF, "") ?: ""
@@ -484,7 +488,7 @@ class MainActivity : ComponentActivity() {
 enum class ViewType { Pager, Grid, List }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
-    ExperimentalTextApi::class
+    ExperimentalTextApi::class, ExperimentalMaterial3ExpressiveApi::class
 )
 @Composable
 fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
@@ -507,6 +511,9 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
     val userName = remember { mutableStateOf(prefs.getString("pref_user_name", "User") ?: "User") }
     val sortType = remember { mutableStateOf(prefs.getString("pref_sort_type", "Alphabetical") ?: "Alphabetical") }
     val statsInterval = remember { mutableFloatStateOf(prefs.getFloat("pref_stats_interval", 3f)) }
+
+    val showLaunchCount = remember { mutableStateOf(prefs.getBoolean("pref_show_launch_count", true)) }
+    val showPlayTime = remember { mutableStateOf(prefs.getBoolean("pref_show_play_time", true)) }
 
 
     val currentVersionName = remember {
@@ -561,6 +568,12 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                 statsInterval.floatValue = sharedPreferences.getFloat("pref_stats_interval", 3f)
                 viewModel.loadGames(context)
             }
+            if (key == "pref_show_launch_count") {
+                showLaunchCount.value = sharedPreferences.getBoolean("pref_show_launch_count", true)
+            }
+            if (key == "pref_show_play_time") {
+                showPlayTime.value = sharedPreferences.getBoolean("pref_show_play_time", true)
+            }
         }
         prefs.registerOnSharedPreferenceChangeListener(listener)
         onDispose {
@@ -597,41 +610,43 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
     }
 
     val headerItemCount = 2
-    val reorderState = rememberReorderableLazyListState(
-        onMove = { from, to ->
-            if (searchQuery.isNotEmpty()) return@rememberReorderableLazyListState
-            if (from.index < headerItemCount || to.index < headerItemCount) return@rememberReorderableLazyListState
-            if (sortType.value != "Custom") return@rememberReorderableLazyListState
+    val listState = rememberLazyListState()
+    val reorderState = rememberReorderableLazyListState(listState) { from, to ->
+        if (searchQuery.isNotEmpty()) return@rememberReorderableLazyListState
+        if (from.index < headerItemCount || to.index < headerItemCount) return@rememberReorderableLazyListState
 
-            val currentList = games.toMutableList()
-            val fromIndex = from.index - headerItemCount
-            val toIndex = to.index - headerItemCount
+        val currentList = games.toMutableList()
+        val fromIndex = from.index - headerItemCount
+        val toIndex = to.index - headerItemCount
 
-            if (fromIndex in currentList.indices && toIndex in currentList.indices) {
-                val item = currentList.removeAt(fromIndex)
-                currentList.add(toIndex, item)
-                viewModel.updateGamesOrder(currentList)
+        if (fromIndex in currentList.indices && toIndex in currentList.indices) {
+            val item = currentList.removeAt(fromIndex)
+            currentList.add(toIndex, item)
+            viewModel.updateGamesOrder(currentList)
+            if (sortType.value != "Custom") {
+                viewModel.switchToCustomSort(context)
             }
         }
-    )
+    }
 
-    val reorderGridState = rememberReorderableLazyGridState(
-        onMove = { from, to ->
-            if (searchQuery.isNotEmpty()) return@rememberReorderableLazyGridState
-            if (from.index < headerItemCount || to.index < headerItemCount) return@rememberReorderableLazyGridState
-            if (sortType.value != "Custom") return@rememberReorderableLazyGridState
+    val gridState = rememberLazyGridState()
+    val reorderGridState = rememberReorderableLazyGridState(gridState) { from, to ->
+        if (searchQuery.isNotEmpty()) return@rememberReorderableLazyGridState
+        if (from.index < headerItemCount || to.index < headerItemCount) return@rememberReorderableLazyGridState
 
-            val currentList = games.toMutableList()
-            val fromIndex = from.index - headerItemCount
-            val toIndex = to.index - headerItemCount
+        val currentList = games.toMutableList()
+        val fromIndex = from.index - headerItemCount
+        val toIndex = to.index - headerItemCount
 
-            if (fromIndex in currentList.indices && toIndex in currentList.indices) {
-                val item = currentList.removeAt(fromIndex)
-                currentList.add(toIndex, item)
-                viewModel.updateGamesOrder(currentList)
+        if (fromIndex in currentList.indices && toIndex in currentList.indices) {
+            val item = currentList.removeAt(fromIndex)
+            currentList.add(toIndex, item)
+            viewModel.updateGamesOrder(currentList)
+            if (sortType.value != "Custom") {
+                viewModel.switchToCustomSort(context)
             }
         }
-    )
+    }
 
     LaunchedEffect(Unit) {
         if (games.isEmpty()) viewModel.loadGames(context)
@@ -659,9 +674,9 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
         derivedStateOf {
             if (currentViewType == ViewType.Pager) false
             else if (currentViewType == ViewType.List) {
-                reorderState.listState.firstVisibleItemIndex > 0
+                listState.firstVisibleItemIndex > 0
             } else {
-                reorderGridState.gridState.firstVisibleItemIndex > 0
+                gridState.firstVisibleItemIndex > 0
             }
         }
     }
@@ -761,11 +776,8 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                 Box(modifier = Modifier.weight(1f)) {
                     if (isLoading) {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(64.dp),
-                                strokeWidth = 6.dp,
-                                strokeCap = StrokeCap.Round,
-                                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                            LoadingIndicator(
+                                modifier = Modifier.size(64.dp)
                             )
                         }
                     } else if (games.isEmpty()) {
@@ -805,9 +817,11 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                                         )
                                         HorizontalGamePager(
                                             games = displayGames,
+                                            showLaunchCount = showLaunchCount.value,
+                                            showPlayTime = showPlayTime.value,
                                             onLaunch = launchGame,
                                             onStoreClick = { openPlayStore(it.packageName) },
-                                            onLongPress = { if(sortType.value == "Custom") isEditMode = true },
+                                            onLongPress = { isEditMode = true },
                                             onDelete = { gameToRemove = it }
                                         )
                                     }
@@ -815,14 +829,12 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                                 ViewType.Grid -> {
                                     val gridShape = remember { RoundedCornerShape(24.dp) }
                                     LazyVerticalGrid(
-                                        state = reorderGridState.gridState,
+                                        state = gridState,
                                         columns = GridCells.Fixed(2),
                                         contentPadding = PaddingValues(start = 20.dp, top = 0.dp, end = 20.dp, bottom = 100.dp),
                                         verticalArrangement = Arrangement.spacedBy(16.dp),
                                         horizontalArrangement = Arrangement.spacedBy(16.dp),
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .reorderable(reorderGridState)
+                                        modifier = Modifier.fillMaxSize()
                                     ) {
                                         item(span = { GridItemSpan(maxLineSpan) }, key = "header_title") {
                                             if (!isEditMode) {
@@ -857,18 +869,19 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                                                             shape = gridShape
                                                             clip = false
                                                         }
-                                                        .detectReorderAfterLongPress(reorderGridState)
                                                 ) {
                                                     if (!isEditMode) {
                                                         SwipeableGameContainer(
                                                             item = game,
+                                                            showLaunchCount = showLaunchCount.value,
+                                                            showPlayTime = showPlayTime.value,
                                                             onDelete = { gameToRemove = game }
                                                         ) {
                                                             GridGameCard(
                                                                 game = game,
                                                                 isEditMode = false,
                                                                 onLaunch = { launchGame(game) },
-                                                                onLongPress = { if (searchQuery.isEmpty() && sortType.value == "Custom") isEditMode = true }
+                                                                onLongPress = { isEditMode = true }
                                                             )
                                                         }
                                                     } else {
@@ -877,6 +890,7 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                                                             isEditMode = true,
                                                             onLaunch = {},
                                                             onLongPress = {},
+                                                            dragHandleModifier = Modifier.draggableHandle()
                                                         )
                                                     }
                                                 }
@@ -892,12 +906,10 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                                 ViewType.List -> {
                                     val listShape = remember { RoundedCornerShape(28.dp) }
                                     LazyColumn(
-                                        state = reorderState.listState,
+                                        state = listState,
                                         contentPadding = PaddingValues(start = 20.dp, top = 0.dp, end = 20.dp, bottom = 100.dp),
                                         verticalArrangement = Arrangement.spacedBy(16.dp),
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .reorderable(reorderState)
+                                        modifier = Modifier.fillMaxSize()
                                     ) {
                                         item(key = "header_title") {
                                             if (!isEditMode) {
@@ -928,6 +940,8 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                                                 if (!isEditMode) {
                                                     SwipeableGameContainer(
                                                         item = game,
+                                                        showLaunchCount = showLaunchCount.value,
+                                                        showPlayTime = showPlayTime.value,
                                                         onDelete = { gameToRemove = game }
                                                     ) {
                                                         GameListItem(
@@ -935,7 +949,7 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                                                             isEditMode = false,
                                                             onLaunch = { launchGame(game) },
                                                             onStoreClick = { openPlayStore(game.packageName) },
-                                                            onLongPress = { if (searchQuery.isEmpty() && sortType.value == "Custom") isEditMode = true }
+                                                            onLongPress = { isEditMode = true }
                                                         )
                                                     }
                                                 } else {
@@ -950,7 +964,6 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                                                                 clip = false
                                                             }
                                                             .background(MaterialTheme.colorScheme.background)
-                                                            .detectReorderAfterLongPress(reorderState)
                                                     ) {
                                                         GameListItem(
                                                             game = game,
@@ -958,7 +971,8 @@ fun GameHubScreen(viewModel: GameViewModel = viewModel()) {
                                                             onLaunch = {},
                                                             onStoreClick = {},
                                                             onLongPress = {},
-                                                            isDragging = isDragging
+                                                            isDragging = isDragging,
+                                                            dragHandleModifier = Modifier.draggableHandle()
                                                         )
                                                     }
                                                 }
@@ -1184,6 +1198,8 @@ fun AppIcon(
 @Composable
 fun HorizontalGamePager(
     games: List<GameApp>,
+    showLaunchCount: Boolean,
+    showPlayTime: Boolean,
     onLaunch: (GameApp) -> Unit,
     onStoreClick: (GameApp) -> Unit,
     onLongPress: () -> Unit,
@@ -1202,12 +1218,15 @@ fun HorizontalGamePager(
         val game = games[page]
 
         val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
-        val scale = lerp(1f, 0.85f, pageOffset.absoluteValue.coerceIn(0f, 1f))
-        val alpha = lerp(1f, 0.5f, pageOffset.absoluteValue.coerceIn(0f, 1f))
+        val scale = lerp(1f, 0.9f, pageOffset.absoluteValue.coerceIn(0f, 1f))
+        val alpha = lerp(1f, 0.6f, pageOffset.absoluteValue.coerceIn(0f, 1f))
 
         SwipeableGameContainer(
             item = game,
+            showLaunchCount = showLaunchCount,
+            showPlayTime = showPlayTime,
             onDelete = { onDelete(game) },
+            orientation = Orientation.Vertical,
             modifier = Modifier
                 .graphicsLayer {
                     scaleX = scale
@@ -1238,7 +1257,7 @@ fun HorizontalGameCard(
 
     val scaleFactor by animateFloatAsState(
         targetValue = if (isPressed) 0.98f else 1f,
-        animationSpec = spring(dampingRatio = 0.8f, stiffness = 300f),
+        animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy, stiffness = Spring.StiffnessMedium),
         label = "scale"
     )
 
@@ -1311,14 +1330,15 @@ fun GridGameCard(
     game: GameApp,
     isEditMode: Boolean,
     onLaunch: () -> Unit,
-    onLongPress: () -> Unit
+    onLongPress: () -> Unit,
+    dragHandleModifier: Modifier = Modifier
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
     val scaleFactor by animateFloatAsState(
         targetValue = if (isPressed) 0.95f else 1f,
-        animationSpec = spring(dampingRatio = 0.8f, stiffness = 300f),
+        animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy, stiffness = Spring.StiffnessMedium),
         label = "scale"
     )
 
@@ -1375,7 +1395,7 @@ fun GridGameCard(
                     Icons.Default.DragHandle,
                     contentDescription = "Drag",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                    modifier = Modifier
+                    modifier = dragHandleModifier
                         .align(Alignment.TopEnd)
                         .padding(8.dp)
                         .size(24.dp)
@@ -1388,109 +1408,156 @@ fun GridGameCard(
 @Composable
 fun SwipeableGameContainer(
     item: GameApp,
+    showLaunchCount: Boolean,
+    showPlayTime: Boolean,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
+    orientation: Orientation = Orientation.Horizontal,
     content: @Composable () -> Unit
 ) {
-    var offsetX by remember { mutableFloatStateOf(0f) }
+    var offset by remember { mutableFloatStateOf(0f) }
     var isRevealed by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
     val density = LocalDensity.current
 
     val revealThreshold = with(density) { 100.dp.toPx() }
     val deleteThreshold = with(density) { 150.dp.toPx() }
     val revealOffset = with(density) { -140.dp.toPx() }
 
-    val animatedOffsetX by animateFloatAsState(
-        targetValue = offsetX,
-        animationSpec = spring(dampingRatio = 0.8f, stiffness = 300f),
+    val canSwipeStats = showLaunchCount || showPlayTime
+    val isVertical = orientation == Orientation.Vertical
+
+    val animatedOffset by animateFloatAsState(
+        targetValue = offset,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy, stiffness = Spring.StiffnessMedium),
         label = "offset"
     )
 
-    val revealProgress = (offsetX / revealOffset).coerceIn(0f, 1f)
+    val revealProgress = (offset.absoluteValue / revealOffset.absoluteValue).coerceIn(0f, 1f)
+    val deleteProgress = (offset.absoluteValue / deleteThreshold).coerceIn(0f, 1f)
 
     Box(modifier = modifier) {
-        if (offsetX > 0) {
+        val showDelete = if (isVertical) offset < 0 else offset > 0
+
+        if (showDelete) {
             Box(
                 modifier = Modifier
                     .matchParentSize()
                     .clip(RoundedCornerShape(28.dp))
                     .background(MaterialTheme.colorScheme.errorContainer),
-                contentAlignment = Alignment.CenterStart
+                contentAlignment = if (isVertical) Alignment.BottomCenter else Alignment.CenterStart
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onErrorContainer,
-                    modifier = Modifier.padding(start = 24.dp)
+                    modifier = Modifier
+                        .padding(
+                            start = if (isVertical) 0.dp else 24.dp,
+                            bottom = if (isVertical) 24.dp else 0.dp
+                        )
+                        .graphicsLayer {
+                            scaleX = 0.8f + (0.2f * deleteProgress)
+                            scaleY = 0.8f + (0.2f * deleteProgress)
+                            alpha = deleteProgress
+                        }
                 )
             }
         }
 
-        if (offsetX < 0) {
+        val showStats = if (isVertical) offset > 0 else offset < 0
+
+        if (showStats && canSwipeStats) {
             Box(
                 modifier = Modifier
                     .matchParentSize()
                     .clip(RoundedCornerShape(28.dp))
-                    .background(MaterialTheme.colorScheme.tertiaryContainer),
-                contentAlignment = Alignment.CenterEnd
+                    .background(MaterialTheme.colorScheme.primary),
+                contentAlignment = if (isVertical) Alignment.TopCenter else Alignment.CenterEnd
             ) {
                 Column(
-                    modifier = Modifier.padding(end = 24.dp).width(80.dp),
+                    modifier = Modifier
+                        .padding(
+                            end = if (isVertical) 0.dp else 24.dp,
+                            top = if (isVertical) 24.dp else 0.dp
+                        )
+                        .width(if(isVertical) 120.dp else 80.dp)
+                        .graphicsLayer {
+                            scaleX = 0.8f + (0.2f * revealProgress)
+                            scaleY = 0.8f + (0.2f * revealProgress)
+                            alpha = revealProgress
+                        },
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onTertiaryContainer,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Text(
-                        text = "${item.launchCount}",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Icon(
-                        imageVector = Icons.Outlined.Timer,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onTertiaryContainer,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Text(
-                        text = formatPlayTime(item.totalPlayTime),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        textAlign = TextAlign.Center
-                    )
+                    if (isVertical) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                            if (showLaunchCount) {
+                                Icon(Icons.Default.PlayArrow, null, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(20.dp))
+                                Text("${item.launchCount}", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onPrimary)
+                            }
+                            if (showLaunchCount && showPlayTime) Spacer(Modifier.width(16.dp))
+                            if (showPlayTime) {
+                                Icon(Icons.Outlined.Timer, null, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(20.dp))
+                                Text(formatPlayTime(item.totalPlayTime), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onPrimary)
+                            }
+                        }
+                    } else {
+                        if (showLaunchCount) {
+                            Icon(Icons.Default.PlayArrow, null, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(20.dp))
+                            Text("${item.launchCount}", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onPrimary)
+                        }
+                        if (showLaunchCount && showPlayTime) Spacer(Modifier.height(8.dp))
+                        if (showPlayTime) {
+                            Icon(Icons.Outlined.Timer, null, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(20.dp))
+                            Text(formatPlayTime(item.totalPlayTime), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onPrimary, textAlign = TextAlign.Center)
+                        }
+                    }
                 }
             }
         }
 
         Box(
             modifier = Modifier
-                .offset { IntOffset(animatedOffsetX.roundToInt(), 0) }
+                .offset {
+                    if (isVertical) IntOffset(0, animatedOffset.roundToInt())
+                    else IntOffset(animatedOffset.roundToInt(), 0)
+                }
                 .draggable(
                     state = rememberDraggableState { delta ->
-                        val newOffset = offsetX + delta
+                        val newOffset = offset + delta
                         if (isRevealed) {
-                            offsetX = newOffset.coerceAtMost(0f)
+                            offset = if (newOffset.absoluteValue < offset.absoluteValue) newOffset else offset
+                            if (newOffset.absoluteValue < 10f) {
+                                offset = 0f
+                                isRevealed = false
+                            }
                         } else {
-                            offsetX = newOffset
+                            if (!canSwipeStats) {
+                                if (isVertical) {
+                                    if (newOffset > 0) offset = 0f else offset = newOffset
+                                } else {
+                                    if (newOffset < 0) offset = 0f else offset = newOffset
+                                }
+                            } else {
+                                offset = newOffset
+                            }
                         }
                     },
-                    orientation = Orientation.Horizontal,
+                    orientation = orientation,
                     onDragStopped = {
-                        if (offsetX > deleteThreshold) {
+                        val absOffset = offset.absoluteValue
+                        val isDeleteDirection = if (isVertical) offset < 0 else offset > 0
+                        val isStatsDirection = !isDeleteDirection
+
+                        if (isDeleteDirection && absOffset > deleteThreshold) {
                             onDelete()
-                            offsetX = 0f
+                            offset = 0f
                             isRevealed = false
-                        } else if (offsetX < revealOffset + 50f) {
-                            offsetX = revealOffset
+                        } else if (isStatsDirection && absOffset > revealThreshold && canSwipeStats) {
+                            offset = if (isVertical) revealThreshold + 40f else revealOffset
                             isRevealed = true
                         } else {
-                            offsetX = 0f
+                            offset = 0f
                             isRevealed = false
                         }
                     }
@@ -1547,14 +1614,15 @@ fun GameListItem(
     onLaunch: () -> Unit,
     onStoreClick: () -> Unit,
     onLongPress: () -> Unit = {},
-    isDragging: Boolean = false
+    isDragging: Boolean = false,
+    dragHandleModifier: Modifier = Modifier
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
     val scaleFactor by animateFloatAsState(
         targetValue = if (isEditMode || isDragging) 0.98f else 1f,
-        animationSpec = spring(dampingRatio = 0.8f, stiffness = 300f),
+        animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy, stiffness = Spring.StiffnessMedium),
         label = "scale"
     )
 
@@ -1603,7 +1671,8 @@ fun GameListItem(
                 Icon(
                     Icons.Default.DragHandle,
                     contentDescription = "Drag",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = dragHandleModifier
                 )
             } else {
                 IconButton(onClick = onStoreClick) {

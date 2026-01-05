@@ -44,6 +44,12 @@
             android:label="@string/settings_title"
             android:theme="@style/Theme.GameHub" />
 
+        <activity
+            android:name=".AdvancedSettingsActivity"
+            android:exported="false"
+            android:label="@string/settings_advanced_title"
+            android:theme="@style/Theme.GameHub" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
