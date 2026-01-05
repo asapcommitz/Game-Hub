@@ -2,74 +2,76 @@
     <string name="app_name">Game Hub</string>
     <string name="games_count_suffix">gier gotowych</string>
     <string name="refresh">Odśwież</string>
-    <string name="add_game">Dodaj Grę</string>
-    <string name="search_apps">Szukaj...</string>
+    <string name="add_game">Dodaj grę</string>
+    <string name="search_apps">Szukaj aplikacji...</string>
     <string name="cancel">Anuluj</string>
     <string name="remove">Usuń</string>
     <string name="play">Graj</string>
     <string name="close">Zamknij</string>
     <string name="later">Później</string>
     <string name="save">Zapisz</string>
-    <string name="discard">Odrzuć</string>
+    <string name="discard">Anuluj</string>
 
-    <string name="welcome_subtitle">Twój minimalistyczny menedżer gier.</string>
+    <string name="welcome_subtitle">Twój minimalistyczny menedżer kolekcji gier.</string>
     <string name="next">Dalej</string>
     <string name="back">Wstecz</string>
-    <string name="get_started">Zacznij</string>
+    <string name="get_started">Rozpocznij</string>
 
-    <string name="welcome_to">Witaj w</string>
-    <string name="welcome_preparing_subtitle">Przygotowujemy wszystko dla Ciebie.</string>
+    <string name="welcome_to">Witamy w</string>
+    <string name="welcome_preparing_subtitle">Przygotujmy wszystko dla Ciebie.</string>
 
     <string name="perm_required">Wymagane</string>
     <string name="perm_permissions">Uprawnienia</string>
-    <string name="perm_intro_text">Te uprawnienia są opcjonalne, ale zalecane dla płynnego działania.</string>
+    <string name="perm_intro_text">Te uprawnienia są opcjonalne, ale wysoce zalecane, aby Game Hub działał płynnie.</string>
 
     <string name="perm_notif_title">Powiadomienia</string>
-    <string name="perm_notif_desc">Dowiedz się o aktualizacjach natychmiast.</string>
+    <string name="perm_notif_desc">Dowiedz się natychmiast o nowej aktualizacji.</string>
 
     <string name="perm_install_title">Instalacja aplikacji</string>
     <string name="perm_install_desc">Wymagane do pobierania i instalowania aktualizacji.</string>
 
-    <string name="perm_dashboard_title">Pulpit Gier</string>
-    <string name="perm_dashboard_desc">Włącz nakładkę systemową dla narzędzi i wydajności.</string>
+    <string name="perm_dashboard_title">Pulpit gier</string>
+    <string name="perm_dashboard_desc">Włącz nakładkę systemową dla lepszej wydajności i narzędzi.</string>
+
+    <string name="perm_usage_desc">Wymagane do śledzenia czasu gry i statystyk uruchomień.</string>
 
     <string name="feat_discover">Odkrywaj</string>
     <string name="feat_features">Funkcje</string>
-    <string name="feat_intro">Oto co możesz zrobić z Game Hub.</string>
+    <string name="feat_intro">Oto co możesz zrobić ze swoim nowym Game Hub.</string>
 
-    <string name="feat_order_title">Pełna Kontrola</string>
-    <string name="feat_order_desc">Przytrzymaj kartę, aby edytować. Przeciągnij, aby zmienić kolejność.</string>
+    <string name="feat_order_title">Pełna kontrola</string>
+    <string name="feat_order_desc">Naciśnij i przytrzymaj dowolną kartę, aby wejść w tryb edycji. Przeciągnij, aby zmienić kolejność gier dokładnie tak, jak chcesz.</string>
 
-    <string name="feat_layout_title">Zmiana Układu</string>
-    <string name="feat_layout_desc">Zmień styl kart w Ustawieniach: Domyślny, Poziomy lub Siatka.</string>
+    <string name="feat_layout_title">Zmiana kształtu</string>
+    <string name="feat_layout_desc">Przejdź do Ustawień, aby zmienić styl kart: Domyślny, Poziomy lub Siatka. Dopasuj do siebie.</string>
 
-    <string name="feat_name_title">Osobisty Akcent</string>
-    <string name="feat_name_desc">Wyświetl swoje imię w nagłówku. Dostosuj lub ukryj w Ustawieniach.</string>
+    <string name="feat_name_title">Osobisty akcent</string>
+    <string name="feat_name_desc">Wyświetl swoje imię w nagłówku. Dostosuj je lub ukryj w Ustawieniach.</string>
 
-    <string name="feat_manage_title">Łatwe Zarządzanie</string>
-    <string name="feat_manage_desc">Dotknij +, aby dodać aplikację. Przesuń kartę w prawo, aby usunąć.</string>
+    <string name="feat_manage_title">Łatwe zarządzanie</string>
+    <string name="feat_manage_desc">Dotknij +, aby dodać gry. Przesuń w prawo, aby usunąć, w lewo, aby zobaczyć statystyki czasu gry.</string>
 
     <string name="feat_update_title">Bądź na bieżąco</string>
-    <string name="feat_update_desc">Sprawdzaj aktualizacje Game Hub bezpośrednio w Ustawieniach.</string>
+    <string name="feat_update_desc">Sprawdzaj aktualizacje Game Hub bezpośrednio w Ustawieniach aplikacji. Nigdy nie przegap funkcji.</string>
 
-    <string name="feat_store_title">Odkryj Gry</string>
-    <string name="feat_store_desc">Znajdź nowe tytuły przez Google Play Store. Można wyłączyć.</string>
+    <string name="feat_store_title">Odkrywaj gry</string>
+    <string name="feat_store_desc">Znajdź nowe tytuły dzięki chipowi Google Play Store. Możesz to wyłączyć w Ustawieniach.</string>
 
-    <string name="feat_history_title">Historia Gry</string>
-    <string name="feat_history_desc">Śledź liczbę uruchomień gier. Licznik można ukryć.</string>
+    <string name="feat_history_title">Historia gier</string>
+    <string name="feat_history_desc">Śledź, ile razy uruchomiłeś każdą grę. Ten licznik można ukryć w Ustawieniach.</string>
 
     <string name="no_games_title">Nie znaleziono gier</string>
     <string name="no_games_subtitle">Naciśnij +, aby dodać</string>
-    <string name="download_games">Pobierz gry</string>
+    <string name="download_games">Pobierz nowe gry</string>
     <string name="add_to_library">Dodaj do biblioteki</string>
     <string name="remove_game_title">Usunąć grę?</string>
     <string name="remove_game_desc">To usunie %1$s z Game Hub.</string>
     <string name="remove_action">Usuń</string>
 
-    <string name="edit_mode_title">Edytuj Kolejność</string>
+    <string name="edit_mode_title">Edytuj kolejność</string>
     <string name="edit_mode_description">Przeciągnij, aby przenieść</string>
-    <string name="save_order_title">Zapisać?</string>
-    <string name="save_order_description">Czy zapisać nową kolejność?</string>
+    <string name="save_order_title">Zapisać kolejność?</string>
+    <string name="save_order_description">Zapisać nową kolejność?</string>
 
     <string name="settings_title">Ustawienia</string>
     <string name="settings_header_appearance">Wygląd</string>
@@ -77,45 +79,78 @@
     <string name="settings_header_info">Informacje</string>
 
     <string name="settings_theme_title">Motyw</string>
-    <string name="settings_theme_system">Systemowy</string>
+    <string name="settings_theme_system">Domyślny systemowy</string>
     <string name="settings_theme_light">Jasny</string>
     <string name="settings_theme_dark">Ciemny</string>
-    <string name="settings_card_style_title">Styl Karty</string>
+    <string name="settings_card_style_title">Styl kart</string>
     <string name="settings_card_style_default">Domyślny</string>
     <string name="settings_card_style_horizontal">Poziomy</string>
     <string name="settings_card_style_grid">Siatka</string>
 
     <string name="settings_show_name_title">Pokaż nazwę użytkownika</string>
-    <string name="settings_show_name_desc">Wyświetl imię w nagłówku</string>
-    <string name="settings_edit_name_title">Twoje Imię</string>
-    <string name="settings_edit_name_desc">Dotknij, aby edytować wyświetlaną nazwę</string>
+    <string name="settings_show_name_desc">Pokaż swoje imię w nagłówku</string>
+    <string name="settings_edit_name_title">Twoje imię</string>
+    <string name="settings_edit_name_desc">Dotknij, aby edytować wyświetlane imię</string>
     <string name="dialog_edit_name_title">Wpisz swoje imię</string>
     <string name="dialog_edit_name_hint">Imię</string>
 
-    <string name="settings_show_launch_count_title">Licznik uruchomień</string>
-    <string name="settings_show_launch_count_desc">Pokaż ile razy grałeś</string>
-    <string name="settings_show_get_more_title">Pokaż Więcej Gier</string>
-    <string name="settings_show_get_more_desc">Link do sklepu</string>
-    <string name="settings_google_play_title">Pulpit Gier</string>
+    <string name="settings_sort_title">Kolejność gier</string>
+    <string name="sort_alphabetical">Alfabetycznie</string>
+    <string name="sort_playtime">Czas gry</string>
+    <string name="sort_custom">Własna</string>
+
+    <string name="settings_show_launch_count_title">Pokaż licznik uruchomień</string>
+    <string name="settings_show_launch_count_desc">Pokaż, ile razy grałeś</string>
+
+    <string name="settings_show_playtime_title">Pokaż czas gry</string>
+    <string name="settings_show_playtime_desc">Wyświetl statystyki użycia</string>
+
+    <string name="settings_stats_interval_title">Interwał statystyk</string>
+    <string name="interval_daily">Dzienny</string>
+    <string name="interval_weekly">Tygodniowy</string>
+    <string name="interval_monthly">Miesięczny</string>
+    <string name="interval_yearly">Roczny</string>
+
+    <string name="settings_show_get_more_title">Pokaż Pobierz więcej gier</string>
+    <string name="settings_show_get_more_desc">Pokaż link do sklepu</string>
+    <string name="settings_google_play_title">Pulpit gier</string>
     <string name="settings_google_play_desc">Zarządzaj w ustawieniach GMS</string>
 
-    <string name="settings_version_title">Wersja</string>
+    <string name="settings_advanced_title">Zaawansowane</string>
+    <string name="settings_advanced_desc">Funkcje eksperymentalne i aktualizacje</string>
+
+    <string name="settings_version_title">Wersja aplikacji</string>
     <string name="settings_developer_title">Deweloper</string>
     <string name="settings_developer_name">FeDeveloper95</string>
-    <string name="settings_report_title">Zgłoś błąd / Funkcję</string>
-    <string name="settings_report_desc">Czat na Telegramie</string>
+    <string name="settings_report_title">Zgłoś błąd / funkcję</string>
+    <string name="settings_report_desc">Czat z deweloperem na Telegramie</string>
 
     <string name="settings_check_updates_title">Sprawdź aktualizacje</string>
     <string name="settings_check_updates_desc">Znajdź najnowszą wersję</string>
     <string name="settings_auto_updates_title">Automatyczne aktualizacje</string>
-    <string name="settings_auto_updates_desc">Sprawdzaj przy starcie</string>
+    <string name="settings_auto_updates_desc">Sprawdzaj aktualizacje przy uruchomieniu</string>
 
     <string name="update_checking">Sprawdzanie...</string>
     <string name="update_no_update">Masz najnowszą wersję</string>
-    <string name="update_latest_version_msg">Brak dostępnych aktualizacji.</string>
-    <string name="update_available">Wersja %1$s Dostępna!</string>
+    <string name="update_latest_version_msg">Brak dostępnych aktualizacji w tej chwili.</string>
+    <string name="update_available">Wersja %1$s dostępna!</string>
     <string name="update_action">Aktualizuj</string>
     <string name="update_downloading">Pobieranie...</string>
     <string name="update_error">Błąd</string>
-    <string name="update_error_msg">Nie udało się sprawdzić lub pobrać.</string>
+    <string name="update_error_msg">Nie udało się sprawdzić lub pobrać aktualizacji.</string>
+    <string name="unknown">Nieznany</string>
+
+    <string name="settings_setup_title">Konfiguracja początkowa</string>
+    <string name="settings_setup_desc">Uruchom kreatora powitalnego ponownie</string>
+    <string name="settings_backup_header">Kopia zapasowa i przywracanie</string>
+    <string name="settings_export_title">Eksportuj ustawienia</string>
+    <string name="settings_export_desc">Zapisz konfigurację i listę gier</string>
+    <string name="settings_import_title">Importuj ustawienia</string>
+    <string name="settings_import_desc">Przywróć z pliku kopii zapasowej</string>
+    <string name="dialog_restart_title">Wymagane ponowne uruchomienie</string>
+    <string name="dialog_restart_desc">Ustawienia zostały zaimportowane. Uruchom ponownie aplikację, aby zastosować zmiany.</string>
+    <string name="restart_now">Uruchom ponownie teraz</string>
+    <string name="export_success">Ustawienia wyeksportowane pomyślnie</string>
+    <string name="export_error">Błąd podczas eksportowania ustawień</string>
+    <string name="import_error">Błąd podczas importowania ustawień</string>
 </resources>

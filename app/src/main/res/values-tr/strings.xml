@@ -3,72 +3,74 @@
     <string name="games_count_suffix">oyun hazır</string>
     <string name="refresh">Yenile</string>
     <string name="add_game">Oyun Ekle</string>
-    <string name="search_apps">Ara...</string>
+    <string name="search_apps">Uygulama ara...</string>
     <string name="cancel">İptal</string>
     <string name="remove">Kaldır</string>
     <string name="play">Oyna</string>
     <string name="close">Kapat</string>
     <string name="later">Sonra</string>
     <string name="save">Kaydet</string>
-    <string name="discard">Vazgeç</string>
+    <string name="discard">İptal</string>
 
-    <string name="welcome_subtitle">Minimalist oyun yöneticiniz.</string>
+    <string name="welcome_subtitle">Minimalist oyun koleksiyonu yöneticiniz.</string>
     <string name="next">İleri</string>
     <string name="back">Geri</string>
     <string name="get_started">Başla</string>
 
     <string name="welcome_to">Hoş geldiniz</string>
-    <string name="welcome_preparing_subtitle">Sizin için her şeyi hazırlıyoruz.</string>
+    <string name="welcome_preparing_subtitle">Her şeyi sizin için hazırlayalım.</string>
 
     <string name="perm_required">Gerekli</string>
     <string name="perm_permissions">İzinler</string>
-    <string name="perm_intro_text">Bu izinler isteğe bağlıdır ancak Game Hub\'ın düzgün çalışması için önerilir.</string>
+    <string name="perm_intro_text">Bu izinler isteğe bağlıdır ancak Game Hub\'ın sorunsuz çalışması için şiddetle tavsiye edilir.</string>
 
     <string name="perm_notif_title">Bildirimler</string>
-    <string name="perm_notif_desc">Yeni bir güncelleme olduğunda hemen haberdar olun.</string>
+    <string name="perm_notif_desc">Yeni bir güncelleme geldiğinde hemen haberdar olun.</string>
 
     <string name="perm_install_title">Uygulama Yükleme</string>
     <string name="perm_install_desc">Güncellemeleri indirmek ve yüklemek için gereklidir.</string>
 
-    <string name="perm_dashboard_title">Oyun Paneli</string>
-    <string name="perm_dashboard_desc">Araçlar ve performans için sistem katmanını etkinleştirin.</string>
+    <string name="perm_dashboard_title">Oyun Panosu</string>
+    <string name="perm_dashboard_desc">Daha iyi performans ve araçlar için sistem katmanını etkinleştirin.</string>
+
+    <string name="perm_usage_desc">Oyun süresini ve başlatma istatistiklerini takip etmek için gereklidir.</string>
 
     <string name="feat_discover">Keşfet</string>
     <string name="feat_features">Özellikler</string>
-    <string name="feat_intro">İşte Game Hub ile yapabilecekleriniz.</string>
+    <string name="feat_intro">İşte yeni Game Hub\'ınızla yapabilecekleriniz.</string>
 
     <string name="feat_order_title">Tam Kontrol</string>
-    <string name="feat_order_desc">Düzenlemek için karta basılı tutun. Sıralamak için sürükleyin.</string>
+    <string name="feat_order_desc">Düzenleme Moduna girmek için herhangi bir karta uzun basın. Oyunlarınızı tam istediğiniz gibi yeniden sıralamak için sürükleyin.</string>
 
     <string name="feat_layout_title">Şekil Değiştirme</string>
-    <string name="feat_layout_desc">Kart stilini Ayarlar\'dan değiştirin: Varsayılan, Yatay veya Izgara.</string>
+    <string name="feat_layout_desc">Kart stilini değiştirmek için Ayarlar\'a gidin: Varsayılan, Yatay veya Izgara. Sizin olsun.</string>
 
     <string name="feat_name_title">Kişisel Dokunuş</string>
-    <string name="feat_name_desc">Adınızı başlıkta gösterin. Ayarlar\'dan özelleştirin veya gizleyin.</string>
+    <string name="feat_name_desc">Adınızı başlıkta gösterin. Ayarlar\'da özelleştirin veya gizleyin.</string>
 
     <string name="feat_manage_title">Kolay Yönetim</string>
-    <string name="feat_manage_desc">Uygulama eklemek için +\'ya dokunun. Kaldırmak için kartı sağa kaydırın.</string>
+    <string name="feat_manage_desc">Oyun eklemek için + simgesine dokunun. Kaldırmak için sağa, oyun süresi istatistiklerini görmek için sola kaydırın.</string>
 
     <string name="feat_update_title">Güncel Kalın</string>
-    <string name="feat_update_desc">Game Hub güncellemelerini doğrudan Ayarlar\'dan kontrol edin.</string>
+    <string name="feat_update_desc">Game Hub güncellemelerini doğrudan uygulama Ayarlarından kontrol edin. Hiçbir özelliği kaçırmayın.</string>
 
-    <string name="feat_store_title">Oyun Keşfet</string>
-    <string name="feat_store_desc">Google Play Store üzerinden yeni oyunlar bulun. Kapatılabilir.</string>
+    <string name="feat_store_title">Oyunları Keşfet</string>
+    <string name="feat_store_desc">Google Play Store çipi ile yeni oyunlar bulun. Bunu Ayarlar\'da devre dışı bırakabilirsiniz.</string>
 
     <string name="feat_history_title">Oyun Geçmişi</string>
-    <string name="feat_history_desc">Her oyunu kaç kez başlattığınızı takip edin. Gizlenebilir.</string>
+    <string name="feat_history_desc">Her oyunu kaç kez başlattığınızı takip edin. Bu sayaç Ayarlar\'da gizlenebilir.</string>
 
     <string name="no_games_title">Oyun bulunamadı</string>
-    <string name="no_games_subtitle">Eklemek için +\'ya basın</string>
-    <string name="download_games">Oyun indir</string>
+    <string name="no_games_subtitle">Eklemek için + basın</string>
+    <string name="download_games">Yeni oyunlar al</string>
     <string name="add_to_library">Kütüphaneye ekle</string>
-    <string name="remove_game_title">Oyun kaldırılsın mı?</string>
+    <string name="remove_game_title">Oyun Kaldırılsın mı?</string>
     <string name="remove_game_desc">Bu işlem %1$s oyununu Game Hub\'dan kaldıracak.</string>
     <string name="remove_action">Kaldır</string>
 
     <string name="edit_mode_title">Sıralamayı Düzenle</string>
     <string name="edit_mode_description">Taşımak için sürükleyin</string>
-    <string name="save_order_title">Kaydet?</string>
+    <string name="save_order_title">Sıralamayı kaydet?</string>
     <string name="save_order_description">Yeni sıralamayı kaydetmek istiyor musunuz?</string>
 
     <string name="settings_title">Ayarlar</string>
@@ -77,7 +79,7 @@
     <string name="settings_header_info">Bilgi</string>
 
     <string name="settings_theme_title">Tema</string>
-    <string name="settings_theme_system">Sistem</string>
+    <string name="settings_theme_system">Sistem varsayılanı</string>
     <string name="settings_theme_light">Açık</string>
     <string name="settings_theme_dark">Koyu</string>
     <string name="settings_card_style_title">Kart Stili</string>
@@ -86,36 +88,69 @@
     <string name="settings_card_style_grid">Izgara</string>
 
     <string name="settings_show_name_title">Kullanıcı Adını Göster</string>
-    <string name="settings_show_name_desc">Başlıkta adınızı görüntüleyin</string>
+    <string name="settings_show_name_desc">Adınızı başlıkta gösterin</string>
     <string name="settings_edit_name_title">Adınız</string>
-    <string name="settings_edit_name_desc">Görünen adı düzenlemek için dokunun</string>
+    <string name="settings_edit_name_desc">Görüntülenen adı düzenlemek için dokunun</string>
     <string name="dialog_edit_name_title">Adınızı girin</string>
     <string name="dialog_edit_name_hint">İsim</string>
 
-    <string name="settings_show_launch_count_title">Başlatma Sayacı</string>
-    <string name="settings_show_launch_count_desc">Kaç kez oynadığınızı göster</string>
-    <string name="settings_show_get_more_title">Daha Fazla Oyun Göster</string>
-    <string name="settings_show_get_more_desc">Mağaza bağlantısını göster</string>
-    <string name="settings_google_play_title">Oyun Paneli</string>
-    <string name="settings_google_play_desc">GMS ayarlarında yönet</string>
+    <string name="settings_sort_title">Oyun Sıralaması</string>
+    <string name="sort_alphabetical">Alfabetik</string>
+    <string name="sort_playtime">Oynama Süresi</string>
+    <string name="sort_custom">Özel</string>
 
-    <string name="settings_version_title">Sürüm</string>
+    <string name="settings_show_launch_count_title">Başlatma Sayısını Göster</string>
+    <string name="settings_show_launch_count_desc">Kaç kez oynadığınızı gösterin</string>
+
+    <string name="settings_show_playtime_title">Oynama Süresini Göster</string>
+    <string name="settings_show_playtime_desc">Kullanım istatistiklerini görüntüleyin</string>
+
+    <string name="settings_stats_interval_title">İstatistik Aralığı</string>
+    <string name="interval_daily">Günlük</string>
+    <string name="interval_weekly">Haftalık</string>
+    <string name="interval_monthly">Aylık</string>
+    <string name="interval_yearly">Yıllık</string>
+
+    <string name="settings_show_get_more_title">Daha Fazla Oyun Al\'ı Göster</string>
+    <string name="settings_show_get_more_desc">Mağaza bağlantısını göster</string>
+    <string name="settings_google_play_title">Oyun Panosu</string>
+    <string name="settings_google_play_desc">GMS ayarlarında yönetin</string>
+
+    <string name="settings_advanced_title">Gelişmiş</string>
+    <string name="settings_advanced_desc">Deneysel özellikler ve güncellemeler</string>
+
+    <string name="settings_version_title">Uygulama Sürümü</string>
     <string name="settings_developer_title">Geliştirici</string>
     <string name="settings_developer_name">FeDeveloper95</string>
     <string name="settings_report_title">Hata / Özellik Bildir</string>
-    <string name="settings_report_desc">Geliştirici ile Telegram\'da sohbet et</string>
+    <string name="settings_report_desc">Telegram\'da geliştirici ile sohbet edin</string>
 
-    <string name="settings_check_updates_title">Güncellemeleri denetle</string>
+    <string name="settings_check_updates_title">Güncellemeleri kontrol et</string>
     <string name="settings_check_updates_desc">En son sürümü bul</string>
     <string name="settings_auto_updates_title">Otomatik güncellemeler</string>
-    <string name="settings_auto_updates_desc">Başlangıçta kontrol et</string>
+    <string name="settings_auto_updates_desc">Başlangıçta güncellemeleri kontrol et</string>
 
     <string name="update_checking">Kontrol ediliyor...</string>
-    <string name="update_no_update">Sürümünüz güncel</string>
-    <string name="update_latest_version_msg">Şu anda güncelleme yok.</string>
+    <string name="update_no_update">En son sürüme sahipsiniz</string>
+    <string name="update_latest_version_msg">Şu anda güncelleme mevcut değil.</string>
     <string name="update_available">Sürüm %1$s Mevcut!</string>
     <string name="update_action">Güncelle</string>
     <string name="update_downloading">İndiriliyor...</string>
     <string name="update_error">Hata</string>
-    <string name="update_error_msg">Kontrol veya indirme başarısız.</string>
+    <string name="update_error_msg">Güncelleme kontrol edilemedi veya indirilemedi.</string>
+    <string name="unknown">Bilinmiyor</string>
+
+    <string name="settings_setup_title">İlk Kurulum</string>
+    <string name="settings_setup_desc">Hoş geldin sihirbazını tekrar çalıştır</string>
+    <string name="settings_backup_header">Yedekle ve Geri Yükle</string>
+    <string name="settings_export_title">Ayarları Dışa Aktar</string>
+    <string name="settings_export_desc">Yapılandırmayı ve oyun listesini kaydet</string>
+    <string name="settings_import_title">Ayarları İçe Aktar</string>
+    <string name="settings_import_desc">Yedekleme dosyasından geri yükle</string>
+    <string name="dialog_restart_title">Yeniden Başlatma Gerekli</string>
+    <string name="dialog_restart_desc">Ayarlar içe aktarıldı. Değişiklikleri uygulamak için uygulamayı yeniden başlatın.</string>
+    <string name="restart_now">Şimdi Yeniden Başlat</string>
+    <string name="export_success">Ayarlar başarıyla dışa aktarıldı</string>
+    <string name="export_error">Ayarları dışa aktarma hatası</string>
+    <string name="import_error">Ayarları içe aktarma hatası</string>
 </resources>

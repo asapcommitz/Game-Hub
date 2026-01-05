@@ -95,8 +95,9 @@ class WelcomeActivity : ComponentActivity() {
 
         val prefs = getSharedPreferences("game_hub_settings", Context.MODE_PRIVATE)
         val isFirstRun = prefs.getBoolean("is_first_run", true)
+        val forceShow = intent.getBooleanExtra("FORCE_SHOW", false)
 
-        if (!isFirstRun) {
+        if (!isFirstRun && !forceShow) {
             finishOnboarding()
             return
         }
@@ -110,7 +111,11 @@ class WelcomeActivity : ComponentActivity() {
                 ) {
                     WelcomePagerScreen(onFinished = {
                         prefs.edit().putBoolean("is_first_run", false).apply()
-                        finishOnboarding()
+                        if (forceShow) {
+                            finish()
+                        } else {
+                            finishOnboarding()
+                        }
                     })
                 }
             }

@@ -2,7 +2,7 @@
     <string name="app_name">Game Hub</string>
     <string name="games_count_suffix">trò chơi sẵn sàng</string>
     <string name="refresh">Làm mới</string>
-    <string name="add_game">Thêm Game</string>
+    <string name="add_game">Thêm trò chơi</string>
     <string name="search_apps">Tìm ứng dụng...</string>
     <string name="cancel">Hủy</string>
     <string name="remove">Xóa</string>
@@ -10,66 +10,68 @@
     <string name="close">Đóng</string>
     <string name="later">Để sau</string>
     <string name="save">Lưu</string>
-    <string name="discard">Bỏ qua</string>
+    <string name="discard">Hủy</string>
 
-    <string name="welcome_subtitle">Trình quản lý trò chơi tối giản của bạn.</string>
-    <string name="next">Tiếp</string>
-    <string name="back">Lùi</string>
+    <string name="welcome_subtitle">Trình quản lý bộ sưu tập game tối giản của bạn.</string>
+    <string name="next">Tiếp theo</string>
+    <string name="back">Quay lại</string>
     <string name="get_started">Bắt đầu</string>
 
-    <string name="welcome_to">Chào mừng đến</string>
-    <string name="welcome_preparing_subtitle">Đang chuẩn bị mọi thứ cho bạn.</string>
+    <string name="welcome_to">Chào mừng đến với</string>
+    <string name="welcome_preparing_subtitle">Hãy chuẩn bị mọi thứ cho bạn.</string>
 
     <string name="perm_required">Bắt buộc</string>
     <string name="perm_permissions">Quyền</string>
-    <string name="perm_intro_text">Các quyền này là tùy chọn nhưng được khuyến nghị để Game Hub hoạt động trơn tru.</string>
+    <string name="perm_intro_text">Các quyền này là tùy chọn nhưng rất được khuyến khích để Game Hub hoạt động trơn tru.</string>
 
     <string name="perm_notif_title">Thông báo</string>
     <string name="perm_notif_desc">Biết ngay khi có bản cập nhật mới.</string>
 
     <string name="perm_install_title">Cài đặt ứng dụng</string>
-    <string name="perm_install_desc">Cần thiết để tải và cài đặt cập nhật.</string>
+    <string name="perm_install_desc">Cần thiết để tải xuống và cài đặt các bản cập nhật.</string>
 
-    <string name="perm_dashboard_title">Bảng điều khiển trò chơi</string>
-    <string name="perm_dashboard_desc">Bật lớp phủ hệ thống để có công cụ và hiệu suất tốt hơn.</string>
+    <string name="perm_dashboard_title">Bảng điều khiển Game</string>
+    <string name="perm_dashboard_desc">Bật lớp phủ hệ thống để có hiệu suất và công cụ tốt hơn.</string>
+
+    <string name="perm_usage_desc">Cần thiết để theo dõi thời gian chơi và số liệu thống kê khởi chạy.</string>
 
     <string name="feat_discover">Khám phá</string>
     <string name="feat_features">Tính năng</string>
-    <string name="feat_intro">Đây là những gì bạn có thể làm với Game Hub.</string>
+    <string name="feat_intro">Đây là những gì bạn có thể làm với Game Hub mới của mình.</string>
 
-    <string name="feat_order_title">Kiểm soát hoàn toàn</string>
-    <string name="feat_order_desc">Nhấn giữ thẻ để chỉnh sửa. Kéo để sắp xếp lại trò chơi.</string>
+    <string name="feat_order_title">Kiểm soát toàn diện</string>
+    <string name="feat_order_desc">Nhấn và giữ bất kỳ thẻ nào để vào Chế độ Chỉnh sửa. Kéo để sắp xếp lại các trò chơi theo ý muốn.</string>
 
-    <string name="feat_layout_title">Thay đổi giao diện</string>
-    <string name="feat_layout_desc">Đổi kiểu thẻ trong Cài đặt: Mặc định, Ngang hoặc Lưới.</string>
+    <string name="feat_layout_title">Thay đổi hình dạng</string>
+    <string name="feat_layout_desc">Vào Cài đặt để thay đổi kiểu thẻ: Mặc định, Ngang hoặc Lưới. Biến nó thành của bạn.</string>
 
     <string name="feat_name_title">Dấu ấn cá nhân</string>
-    <string name="feat_name_desc">Hiển thị tên bạn trên tiêu đề. Tùy chỉnh hoặc ẩn trong Cài đặt.</string>
+    <string name="feat_name_desc">Hiển thị tên của bạn trên tiêu đề. Tùy chỉnh hoặc ẩn nó trong Cài đặt.</string>
 
     <string name="feat_manage_title">Quản lý dễ dàng</string>
-    <string name="feat_manage_desc">Nhấn + để thêm ứng dụng. Vuốt thẻ sang phải để xóa ngay lập tức.</string>
+    <string name="feat_manage_desc">Nhấn + để thêm trò chơi. Vuốt sang phải để xóa, sang trái để xem thống kê thời gian chơi.</string>
 
     <string name="feat_update_title">Luôn cập nhật</string>
-    <string name="feat_update_desc">Kiểm tra cập nhật Game Hub ngay trong Cài đặt.</string>
+    <string name="feat_update_desc">Kiểm tra các bản cập nhật Game Hub trực tiếp trong Cài đặt ứng dụng. Không bao giờ bỏ lỡ tính năng nào.</string>
 
-    <string name="feat_store_title">Tìm game mới</string>
-    <string name="feat_store_desc">Tìm tựa game mới qua Google Play Store. Có thể tắt.</string>
+    <string name="feat_store_title">Khám phá trò chơi</string>
+    <string name="feat_store_desc">Tìm các tựa game mới qua chip Google Play Store. Bạn có thể tắt tính năng này trong Cài đặt.</string>
 
     <string name="feat_history_title">Lịch sử chơi</string>
-    <string name="feat_history_desc">Theo dõi số lần bạn khởi động mỗi trò chơi. Có thể ẩn.</string>
+    <string name="feat_history_desc">Theo dõi số lần bạn đã khởi chạy mỗi trò chơi. Bộ đếm này có thể được ẩn trong Cài đặt.</string>
 
     <string name="no_games_title">Không tìm thấy trò chơi</string>
     <string name="no_games_subtitle">Nhấn + để thêm</string>
     <string name="download_games">Tải game mới</string>
     <string name="add_to_library">Thêm vào thư viện</string>
     <string name="remove_game_title">Xóa trò chơi?</string>
-    <string name="remove_game_desc">Việc này sẽ xóa %1$s khỏi Game Hub.</string>
+    <string name="remove_game_desc">Thao tác này sẽ xóa %1$s khỏi Game Hub.</string>
     <string name="remove_action">Xóa</string>
 
-    <string name="edit_mode_title">Sửa thứ tự</string>
+    <string name="edit_mode_title">Chỉnh sửa thứ tự</string>
     <string name="edit_mode_description">Kéo để di chuyển</string>
     <string name="save_order_title">Lưu thứ tự?</string>
-    <string name="save_order_description">Bạn có muốn lưu thứ tự mới không?</string>
+    <string name="save_order_description">Lưu thứ tự mới?</string>
 
     <string name="settings_title">Cài đặt</string>
     <string name="settings_header_appearance">Giao diện</string>
@@ -77,7 +79,7 @@
     <string name="settings_header_info">Thông tin</string>
 
     <string name="settings_theme_title">Chủ đề</string>
-    <string name="settings_theme_system">Hệ thống</string>
+    <string name="settings_theme_system">Mặc định hệ thống</string>
     <string name="settings_theme_light">Sáng</string>
     <string name="settings_theme_dark">Tối</string>
     <string name="settings_card_style_title">Kiểu thẻ</string>
@@ -85,37 +87,70 @@
     <string name="settings_card_style_horizontal">Ngang</string>
     <string name="settings_card_style_grid">Lưới</string>
 
-    <string name="settings_show_name_title">Hiện tên người dùng</string>
-    <string name="settings_show_name_desc">Hiển thị tên bạn ở tiêu đề</string>
+    <string name="settings_show_name_title">Hiển thị tên người dùng</string>
+    <string name="settings_show_name_desc">Hiển thị tên của bạn trên tiêu đề</string>
     <string name="settings_edit_name_title">Tên của bạn</string>
-    <string name="settings_edit_name_desc">Chạm để sửa tên hiển thị</string>
+    <string name="settings_edit_name_desc">Nhấn để chỉnh sửa tên hiển thị</string>
     <string name="dialog_edit_name_title">Nhập tên của bạn</string>
     <string name="dialog_edit_name_hint">Tên</string>
 
-    <string name="settings_show_launch_count_title">Đếm số lần chơi</string>
-    <string name="settings_show_launch_count_desc">Hiện số lần bạn đã chơi</string>
-    <string name="settings_show_get_more_title">Hiện Tìm thêm game</string>
-    <string name="settings_show_get_more_desc">Liên kết đến cửa hàng</string>
-    <string name="settings_google_play_title">Bảng điều khiển trò chơi</string>
+    <string name="settings_sort_title">Thứ tự trò chơi</string>
+    <string name="sort_alphabetical">Bảng chữ cái</string>
+    <string name="sort_playtime">Thời gian chơi</string>
+    <string name="sort_custom">Tùy chỉnh</string>
+
+    <string name="settings_show_launch_count_title">Hiển thị số lần khởi chạy</string>
+    <string name="settings_show_launch_count_desc">Hiển thị số lần bạn đã chơi</string>
+
+    <string name="settings_show_playtime_title">Hiển thị thời gian chơi</string>
+    <string name="settings_show_playtime_desc">Hiển thị thống kê sử dụng</string>
+
+    <string name="settings_stats_interval_title">Khoảng thời gian thống kê</string>
+    <string name="interval_daily">Hàng ngày</string>
+    <string name="interval_weekly">Hàng tuần</string>
+    <string name="interval_monthly">Hàng tháng</string>
+    <string name="interval_yearly">Hàng năm</string>
+
+    <string name="settings_show_get_more_title">Hiển thị Tải thêm trò chơi</string>
+    <string name="settings_show_get_more_desc">Hiển thị liên kết đến cửa hàng</string>
+    <string name="settings_google_play_title">Bảng điều khiển Game</string>
     <string name="settings_google_play_desc">Quản lý trong cài đặt GMS</string>
 
-    <string name="settings_version_title">Phiên bản</string>
+    <string name="settings_advanced_title">Nâng cao</string>
+    <string name="settings_advanced_desc">Tính năng thử nghiệm và cập nhật</string>
+
+    <string name="settings_version_title">Phiên bản ứng dụng</string>
     <string name="settings_developer_title">Nhà phát triển</string>
     <string name="settings_developer_name">FeDeveloper95</string>
     <string name="settings_report_title">Báo lỗi / Tính năng</string>
-    <string name="settings_report_desc">Chat với dev trên Telegram</string>
+    <string name="settings_report_desc">Trò chuyện với nhà phát triển trên Telegram</string>
 
     <string name="settings_check_updates_title">Kiểm tra cập nhật</string>
     <string name="settings_check_updates_desc">Tìm phiên bản mới nhất</string>
-    <string name="settings_auto_updates_title">Cập nhật tự động</string>
-    <string name="settings_auto_updates_desc">Kiểm tra khi khởi động</string>
+    <string name="settings_auto_updates_title">Tự động cập nhật</string>
+    <string name="settings_auto_updates_desc">Kiểm tra cập nhật khi khởi động</string>
 
     <string name="update_checking">Đang kiểm tra...</string>
-    <string name="update_no_update">Bạn đang dùng bản mới nhất</string>
+    <string name="update_no_update">Bạn đang có phiên bản mới nhất</string>
     <string name="update_latest_version_msg">Hiện không có bản cập nhật nào.</string>
-    <string name="update_available">Có phiên bản %1$s!</string>
+    <string name="update_available">Phiên bản %1$s có sẵn!</string>
     <string name="update_action">Cập nhật</string>
-    <string name="update_downloading">Đang tải...</string>
+    <string name="update_downloading">Đang tải xuống...</string>
     <string name="update_error">Lỗi</string>
-    <string name="update_error_msg">Không thể kiểm tra hoặc tải xuống.</string>
+    <string name="update_error_msg">Không thể kiểm tra hoặc tải xuống bản cập nhật.</string>
+    <string name="unknown">Không rõ</string>
+
+    <string name="settings_setup_title">Thiết lập ban đầu</string>
+    <string name="settings_setup_desc">Chạy lại trình hướng dẫn chào mừng</string>
+    <string name="settings_backup_header">Sao lưu &amp; Khôi phục</string>
+    <string name="settings_export_title">Xuất cài đặt</string>
+    <string name="settings_export_desc">Lưu cấu hình và danh sách trò chơi</string>
+    <string name="settings_import_title">Nhập cài đặt</string>
+    <string name="settings_import_desc">Khôi phục từ tệp sao lưu</string>
+    <string name="dialog_restart_title">Yêu cầu khởi động lại</string>
+    <string name="dialog_restart_desc">Cài đặt đã được nhập. Khởi động lại ứng dụng để áp dụng thay đổi.</string>
+    <string name="restart_now">Khởi động lại ngay</string>
+    <string name="export_success">Xuất cài đặt thành công</string>
+    <string name="export_error">Lỗi khi xuất cài đặt</string>
+    <string name="import_error">Lỗi khi nhập cài đặt</string>
 </resources>

@@ -3,64 +3,66 @@
     <string name="games_count_suffix">ігор готово</string>
     <string name="refresh">Оновити</string>
     <string name="add_game">Додати гру</string>
-    <string name="search_apps">Пошук...</string>
+    <string name="search_apps">Пошук додатків...</string>
     <string name="cancel">Скасувати</string>
     <string name="remove">Видалити</string>
     <string name="play">Грати</string>
     <string name="close">Закрити</string>
     <string name="later">Пізніше</string>
     <string name="save">Зберегти</string>
-    <string name="discard">Відхилити</string>
+    <string name="discard">Скасувати</string>
 
-    <string name="welcome_subtitle">Ваш мінімалістичний менеджер ігор.</string>
+    <string name="welcome_subtitle">Ваш мінімалістичний менеджер колекції ігор.</string>
     <string name="next">Далі</string>
     <string name="back">Назад</string>
-    <string name="get_started">Почати</string>
+    <string name="get_started">Розпочати</string>
 
     <string name="welcome_to">Ласкаво просимо до</string>
-    <string name="welcome_preparing_subtitle">Ми все готуємо для вас.</string>
+    <string name="welcome_preparing_subtitle">Давайте підготуємо все для вас.</string>
 
     <string name="perm_required">Потрібно</string>
     <string name="perm_permissions">Дозволи</string>
-    <string name="perm_intro_text">Ці дозволи необов\'язкові, але рекомендовані для кращої роботи.</string>
+    <string name="perm_intro_text">Ці дозволи є необов\'язковими, але дуже рекомендованими для безперебійної роботи Game Hub.</string>
 
     <string name="perm_notif_title">Сповіщення</string>
-    <string name="perm_notif_desc">Дізнавайтеся про оновлення миттєво.</string>
+    <string name="perm_notif_desc">Дізнавайтеся відразу про вихід нових оновлень.</string>
 
-    <string name="perm_install_title">Встановлення програм</string>
+    <string name="perm_install_title">Встановлення додатків</string>
     <string name="perm_install_desc">Потрібно для завантаження та встановлення оновлень.</string>
 
     <string name="perm_dashboard_title">Ігрова панель</string>
-    <string name="perm_dashboard_desc">Увімкнути системний оверлей для інструментів та продуктивності.</string>
+    <string name="perm_dashboard_desc">Увімкніть системне накладення для кращої продуктивності та інструментів.</string>
 
-    <string name="feat_discover">Відкриття</string>
-    <string name="feat_features">Можливості</string>
-    <string name="feat_intro">Ось що ви можете робити з Game Hub.</string>
+    <string name="perm_usage_desc">Потрібно для відстеження часу гри та статистики запусків.</string>
+
+    <string name="feat_discover">Відкривайте</string>
+    <string name="feat_features">Функції</string>
+    <string name="feat_intro">Ось що ви можете робити з вашим новим Game Hub.</string>
 
     <string name="feat_order_title">Повний контроль</string>
-    <string name="feat_order_desc">Утримуйте картку для редагування. Перетягуйте, щоб впорядкувати ігри.</string>
+    <string name="feat_order_desc">Натисніть і утримуйте будь-яку картку, щоб увійти в режим редагування. Перетягуйте, щоб змінити порядок ігор так, як вам подобається.</string>
 
-    <string name="feat_layout_title">Зміна вигляду</string>
-    <string name="feat_layout_desc">Змінюйте стиль у Налаштуваннях: За замовчуванням, Горизонтально або Сітка.</string>
+    <string name="feat_layout_title">Зміна форми</string>
+    <string name="feat_layout_desc">Перейдіть до Налаштувань, щоб змінити стиль картки: За замовчуванням, Горизонтальний або Сітка. Зробіть його своїм.</string>
 
     <string name="feat_name_title">Особистий штрих</string>
-    <string name="feat_name_desc">Відображайте своє ім\'я в заголовку. Налаштуйте або приховайте його.</string>
+    <string name="feat_name_desc">Відображайте своє ім\'я в заголовку. Налаштуйте або приховайте його в Налаштуваннях.</string>
 
-    <string name="feat_manage_title">Просте керування</string>
-    <string name="feat_manage_desc">Натисніть +, щоб додати програму. Свайпніть картку вправо, щоб видалити.</string>
+    <string name="feat_manage_title">Легке управління</string>
+    <string name="feat_manage_desc">Натисніть +, щоб додати ігри. Проведіть вправо для видалення, вліво для перегляду статистики часу гри.</string>
 
     <string name="feat_update_title">Будьте в курсі</string>
-    <string name="feat_update_desc">Перевіряйте оновлення Game Hub прямо в налаштуваннях.</string>
+    <string name="feat_update_desc">Перевіряйте оновлення Game Hub безпосередньо в налаштуваннях додатка. Ніколи не пропускайте нові функції.</string>
 
-    <string name="feat_store_title">Нові ігри</string>
-    <string name="feat_store_desc">Знаходьте ігри через Google Play Store. Можна вимкнути.</string>
+    <string name="feat_store_title">Знайти ігри</string>
+    <string name="feat_store_desc">Знаходьте нові ігри через чіп Google Play Store. Ви можете вимкнути це в Налаштуваннях.</string>
 
     <string name="feat_history_title">Історія ігор</string>
-    <string name="feat_history_desc">Стежте за кількістю запусків. Можна приховати в налаштуваннях.</string>
+    <string name="feat_history_desc">Відстежуйте, скільки разів ви запускали кожну гру. Цей лічильник можна приховати в Налаштуваннях.</string>
 
     <string name="no_games_title">Ігор не знайдено</string>
     <string name="no_games_subtitle">Натисніть +, щоб додати</string>
-    <string name="download_games">Завантажити ігри</string>
+    <string name="download_games">Знайти нові ігри</string>
     <string name="add_to_library">Додати до бібліотеки</string>
     <string name="remove_game_title">Видалити гру?</string>
     <string name="remove_game_desc">Це видалить %1$s з Game Hub.</string>
@@ -69,10 +71,10 @@
     <string name="edit_mode_title">Змінити порядок</string>
     <string name="edit_mode_description">Перетягніть для переміщення</string>
     <string name="save_order_title">Зберегти порядок?</string>
-    <string name="save_order_description">Ви хочете зберегти новий порядок?</string>
+    <string name="save_order_description">Зберегти новий порядок?</string>
 
     <string name="settings_title">Налаштування</string>
-    <string name="settings_header_appearance">Вигляд</string>
+    <string name="settings_header_appearance">Зовнішній вигляд</string>
     <string name="settings_header_preferences">Вподобання</string>
     <string name="settings_header_info">Інформація</string>
 
@@ -80,42 +82,75 @@
     <string name="settings_theme_system">Системна</string>
     <string name="settings_theme_light">Світла</string>
     <string name="settings_theme_dark">Темна</string>
-    <string name="settings_card_style_title">Стиль карток</string>
-    <string name="settings_card_style_default">Стандарт</string>
-    <string name="settings_card_style_horizontal">Горизонтально</string>
+    <string name="settings_card_style_title">Стиль картки</string>
+    <string name="settings_card_style_default">За замовчуванням</string>
+    <string name="settings_card_style_horizontal">Горизонтальний</string>
     <string name="settings_card_style_grid">Сітка</string>
 
-    <string name="settings_show_name_title">Показувати ім\'я</string>
+    <string name="settings_show_name_title">Показувати ім\'я користувача</string>
     <string name="settings_show_name_desc">Відображати ваше ім\'я в заголовку</string>
     <string name="settings_edit_name_title">Ваше ім\'я</string>
     <string name="settings_edit_name_desc">Натисніть, щоб змінити відображуване ім\'я</string>
     <string name="dialog_edit_name_title">Введіть ваше ім\'я</string>
     <string name="dialog_edit_name_hint">Ім\'я</string>
 
-    <string name="settings_show_launch_count_title">Лічильник запусків</string>
+    <string name="settings_sort_title">Порядок ігор</string>
+    <string name="sort_alphabetical">За алфавітом</string>
+    <string name="sort_playtime">Час гри</string>
+    <string name="sort_custom">Користувацький</string>
+
+    <string name="settings_show_launch_count_title">Показувати лічильник запусків</string>
     <string name="settings_show_launch_count_desc">Показувати, скільки разів ви грали</string>
-    <string name="settings_show_get_more_title">Посилання на магазин</string>
-    <string name="settings_show_get_more_desc">Показувати посилання на Play Store</string>
+
+    <string name="settings_show_playtime_title">Показувати час гри</string>
+    <string name="settings_show_playtime_desc">Відображати статистику використання</string>
+
+    <string name="settings_stats_interval_title">Інтервал статистики</string>
+    <string name="interval_daily">Щодня</string>
+    <string name="interval_weekly">Щотижня</string>
+    <string name="interval_monthly">Щомісяця</string>
+    <string name="interval_yearly">Щороку</string>
+
+    <string name="settings_show_get_more_title">Показувати "Знайти ще ігри"</string>
+    <string name="settings_show_get_more_desc">Показувати посилання на магазин</string>
     <string name="settings_google_play_title">Ігрова панель</string>
     <string name="settings_google_play_desc">Керування в налаштуваннях GMS</string>
 
-    <string name="settings_version_title">Версія</string>
+    <string name="settings_advanced_title">Додатково</string>
+    <string name="settings_advanced_desc">Експериментальні функції та оновлення</string>
+
+    <string name="settings_version_title">Версія додатка</string>
     <string name="settings_developer_title">Розробник</string>
     <string name="settings_developer_name">FeDeveloper95</string>
-    <string name="settings_report_title">Повідомити про баг</string>
+    <string name="settings_report_title">Повідомити про помилку / функцію</string>
     <string name="settings_report_desc">Чат з розробником у Telegram</string>
 
     <string name="settings_check_updates_title">Перевірити оновлення</string>
     <string name="settings_check_updates_desc">Знайти останню версію</string>
     <string name="settings_auto_updates_title">Автооновлення</string>
-    <string name="settings_auto_updates_desc">Перевіряти при запуску</string>
+    <string name="settings_auto_updates_desc">Перевіряти оновлення при запуску</string>
 
     <string name="update_checking">Перевірка...</string>
     <string name="update_no_update">У вас остання версія</string>
-    <string name="update_latest_version_msg">Немає доступних оновлень.</string>
+    <string name="update_latest_version_msg">На даний момент оновлень немає.</string>
     <string name="update_available">Доступна версія %1$s!</string>
     <string name="update_action">Оновити</string>
     <string name="update_downloading">Завантаження...</string>
     <string name="update_error">Помилка</string>
     <string name="update_error_msg">Не вдалося перевірити або завантажити оновлення.</string>
+    <string name="unknown">Невідомо</string>
+
+    <string name="settings_setup_title">Початкове налаштування</string>
+    <string name="settings_setup_desc">Запустити майстер привітання знову</string>
+    <string name="settings_backup_header">Резервне копіювання та відновлення</string>
+    <string name="settings_export_title">Експорт налаштувань</string>
+    <string name="settings_export_desc">Зберегти конфігурацію та список ігор</string>
+    <string name="settings_import_title">Імпорт налаштувань</string>
+    <string name="settings_import_desc">Відновити з файлу резервної копії</string>
+    <string name="dialog_restart_title">Потрібен перезапуск</string>
+    <string name="dialog_restart_desc">Налаштування імпортовано. Перезапустіть додаток, щоб зміни набули чинності.</string>
+    <string name="restart_now">Перезапустити зараз</string>
+    <string name="export_success">Налаштування успішно експортовано</string>
+    <string name="export_error">Помилка при експорті налаштувань</string>
+    <string name="import_error">Помилка при імпорті налаштувань</string>
 </resources>

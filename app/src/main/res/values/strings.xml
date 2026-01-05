@@ -139,4 +139,18 @@
     <string name="update_error">Error</string>
     <string name="update_error_msg">Could not check or download update.</string>
     <string name="unknown">Unknown</string>
+
+    <string name="settings_setup_title">Initial Setup</string>
+    <string name="settings_setup_desc">Run the welcome wizard again</string>
+    <string name="settings_backup_header">Backup &amp; Restore</string>
+    <string name="settings_export_title">Export Settings</string>
+    <string name="settings_export_desc">Save configuration and games list</string>
+    <string name="settings_import_title">Import Settings</string>
+    <string name="settings_import_desc">Restore from a backup file</string>
+    <string name="dialog_restart_title">Restart Required</string>
+    <string name="dialog_restart_desc">Settings have been imported. Restart the app to apply changes.</string>
+    <string name="restart_now">Restart Now</string>
+    <string name="export_success">Settings exported successfully</string>
+    <string name="export_error">Error exporting settings</string>
+    <string name="import_error">Error importing settings</string>
 </resources>
