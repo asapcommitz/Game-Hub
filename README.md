@@ -30,5 +30,5 @@ Found a bug or have a feature request? Reach me directly via Telegram.
 <details>
   <summary><b>Click to expand screenshots</b></summary>
   <br>
-  <img width="260" alt="Game Hub" src="https://github.com/user-attachments/assets/67c97bb0-2ca2-46e4-a2fd-75116c87b09b" />
-  <img width="260" alt="Game Hub menu" src="https://github.com/user-attachments/assets/0b0a19a3-d215-430b-9081-1c130c7cf4c1" />
+  <img width="260" alt="Game Hub" src="https://github.com/user-attachments/assets/15c7636f-cdb7-4835-8367-7a3578eeb5ed" />
+  <img width="260" alt="Game Hub settings" src="https://github.com/user-attachments/assets/1a3c0a4d-c718-4f38-b3da-e4802b0df5ef" />
