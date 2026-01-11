@@ -369,7 +369,6 @@ private suspend fun importSettings(context: Context, uri: Uri): Boolean {
                     val key = keys.next()
                     val value = json.get(key)
 
-                    // Fix specifico per evitare ClassCastException sui Float
                     if (key == "pref_stats_interval") {
                         editor.putFloat(key, (value as? Number)?.toFloat() ?: 3f)
                         continue
