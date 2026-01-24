@@ -19,6 +19,10 @@ This app acts as a dedicated sanctuary for your games. It automatically detects 
 
 The UI is crafted following the latest **Material 3 Expressive** guidelines.
 
+### Loved help
+
+Special thanks to my awesome girlfriend, [Gaia](https://github.com/Gaia-Kapo), who helped me a lot with the design choices and new features. I love you 🩵
+
 ### Feedback
 
 Found a bug or have a feature request? Reach me directly via Telegram.
