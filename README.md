@@ -9,6 +9,8 @@
 
 [![Get it on GitHub](https://img.shields.io/badge/Get%20it%20on-GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/FeDeveloper95/Game-Hub/releases)
 
+[<img src="https://raw.githubusercontent.com/opencodecollect/opencodecollect/main/badges/badge.webp">](https://github.com/opencodecollect)
+
 ### About
 
 Game Hub brings the simplicity of the classic OxygenOS 11 Game Space to modern Android devices. It eliminates the need to scroll through a messy app drawer to find your next adventure.
